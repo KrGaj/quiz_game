@@ -1,7 +1,9 @@
 package com.example.codingquiz
 
 import android.app.Application
-import com.example.codingquiz.di.dbModule
+import com.example.codingquiz.di.databaseModule
+import com.example.codingquiz.di.repositoryModule
+import com.example.codingquiz.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -13,11 +15,7 @@ class MainApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(this@MainApplication)
-            modules(dbModule)
+            modules(databaseModule, repositoryModule, viewModelModule)
         }
-    }
-
-    companion object {
-        const val DATABASE_NAME = "quiz-database"
     }
 }

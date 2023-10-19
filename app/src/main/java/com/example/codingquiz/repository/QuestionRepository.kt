@@ -1,7 +1,6 @@
 package com.example.codingquiz.repository
 
 import com.example.codingquiz.data.database.dao.QuestionDao
-import com.example.codingquiz.data.database.entity.CategoryEntity
 import com.example.codingquiz.data.domain.Category
 import com.example.codingquiz.data.domain.PossibleAnswer
 import com.example.codingquiz.data.domain.Question
@@ -13,14 +12,9 @@ class QuestionRepository(
         quantity: Int,
         category: Category,
     ): List<Question> {
-        val categoryEntity = CategoryEntity(
-            category.id,
-            category.name,
-        )
-
         val questionsEntities = questionDao.getRandom(
             quantity,
-            categoryEntity,
+            category.id,
         )
 
         val questions = questionsEntities.map {

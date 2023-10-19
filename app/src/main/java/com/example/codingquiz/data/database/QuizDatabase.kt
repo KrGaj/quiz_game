@@ -21,4 +21,8 @@ abstract class QuizDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun questionDao(): QuestionDao
     abstract fun answerDao(): AnswerDao
+
+    companion object {
+        const val DATABASE_NAME = "quiz-database"
+    }
 }

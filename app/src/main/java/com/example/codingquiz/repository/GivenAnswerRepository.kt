@@ -4,7 +4,7 @@ import com.example.codingquiz.data.database.dao.AnswerDao
 import com.example.codingquiz.data.database.entity.AnswerEntity
 import com.example.codingquiz.data.domain.GivenAnswer
 
-class AnswerRepository(
+class GivenAnswerRepository(
     private val answerDao: AnswerDao,
 ) {
     suspend fun insert(
