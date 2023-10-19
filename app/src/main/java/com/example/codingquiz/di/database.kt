@@ -11,7 +11,8 @@ val databaseModule = module {
             androidApplication().applicationContext,
             QuizDatabase::class.java,
             QuizDatabase.DATABASE_NAME,
-        ).build()
+        ).createFromAsset("database/quiz-database.db")
+            .build()
     }
 
     single { get<QuizDatabase>().categoryDao() }

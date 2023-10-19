@@ -20,7 +20,7 @@ fun Categories() {
     // TODO
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun CategoryGrid(
     categoryViewModel: CategoryViewModel = koinViewModel()
