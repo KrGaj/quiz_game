@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS categories(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    category_name TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS questions(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     category INTEGER NOT NULL,
     question_text TEXT NOT NULL,
     answer_first TEXT NOT NULL,
@@ -16,19 +16,19 @@ CREATE TABLE IF NOT EXISTS questions(
 );
 
 CREATE TABLE IF NOT EXISTS answers(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     question INTEGER NOT NULL,
     correct INTEGER NOT NULL,
     FOREIGN KEY(question) REFERENCES questions(id)
 );
 
-INSERT INTO categories(name) VALUES ('Kotlin');
-INSERT INTO categories(name) VALUES ('Java');
-INSERT INTO categories(name) VALUES ('C++');
+INSERT INTO categories(category_name) VALUES ('Kotlin');
+INSERT INTO categories(category_name) VALUES ('Java');
+INSERT INTO categories(category_name) VALUES ('C++');
 
 INSERT INTO questions(category, question_text, answer_first, answer_second, answer_third, answer_fourth, correct_answer)
 VALUES(
-    (SELECT id FROM categories WHERE name='Kotlin'), 
+    (SELECT id FROM categories WHERE category_name='Kotlin'), 
     'val keyword means that:', 
     'Kotlin does not have such a keyword', 
     'Variable cannot be reassigned', 
@@ -39,7 +39,7 @@ VALUES(
 
 INSERT INTO questions(category, question_text, answer_first, answer_second, answer_third, answer_fourth, correct_answer)
 VALUES(
-    (SELECT id FROM categories WHERE name='Kotlin'), 
+    (SELECT id FROM categories WHERE category_name='Kotlin'), 
     'var keyword means that:', 
     'Kotlin does not have such a keyword', 
     'Variable cannot be reassigned', 
@@ -50,7 +50,7 @@ VALUES(
 
 INSERT INTO questions(category, question_text, answer_first, answer_second, answer_third, answer_fourth, correct_answer)
 VALUES(
-    (SELECT id FROM categories WHERE name='Kotlin'), 
+    (SELECT id FROM categories WHERE category_name='Kotlin'), 
     'Latest version of Kotlin (October 2023) is:', 
     '1.9.10', 
     '2.0', 
@@ -61,7 +61,7 @@ VALUES(
 
 INSERT INTO questions(category, question_text, answer_first, answer_second, answer_third, answer_fourth, correct_answer)
 VALUES(
-    (SELECT id FROM categories WHERE name='Kotlin'), 
+    (SELECT id FROM categories WHERE category_name='Kotlin'), 
     'Which feature does Kotlin have, but Java does not?', 
     'Inheritance', 
     'Elements of functional programming', 
@@ -72,7 +72,7 @@ VALUES(
 
 INSERT INTO questions(category, question_text, answer_first, answer_second, answer_third, answer_fourth, correct_answer)
 VALUES(
-    (SELECT id FROM categories WHERE name='Kotlin'), 
+    (SELECT id FROM categories WHERE category_name='Kotlin'), 
     'Does function return value have to be given explicitly?', 
     'No', 
     'Yes, in all cases', 
@@ -83,7 +83,7 @@ VALUES(
 
 INSERT INTO questions(category, question_text, answer_first, answer_second, answer_third, answer_fourth, correct_answer)
 VALUES(
-    (SELECT id FROM categories WHERE name='Kotlin'), 
+    (SELECT id FROM categories WHERE category_name='Kotlin'), 
     'Which version of Kotlin does not exist?', 
     'Kotlin for iOS', 
     'Kotlin for JavaScript', 
@@ -94,7 +94,7 @@ VALUES(
 
 INSERT INTO questions(category, question_text, answer_first, answer_second, answer_third, answer_fourth, correct_answer)
 VALUES(
-    (SELECT id FROM categories WHERE name='Kotlin'), 
+    (SELECT id FROM categories WHERE category_name='Kotlin'), 
     'const keyword means that:', 
     'Kotlin does not have such a keyword', 
     'Variable cannot be reassigned', 

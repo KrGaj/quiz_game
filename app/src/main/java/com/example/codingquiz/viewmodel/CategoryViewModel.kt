@@ -11,12 +11,12 @@ import kotlinx.coroutines.launch
 class CategoryViewModel(
     private val categoryRepository: CategoryRepository,
 ) : ViewModel() {
+    private val _categories = MutableStateFlow(emptyList<Category>())
+    val categories get() = _categories.asStateFlow()
+
     init {
         getCategories()
     }
-
-    private val _categories = MutableStateFlow(emptyList<Category>())
-    val categories get() = _categories.asStateFlow()
 
     fun getCategories() {
         viewModelScope.launch {

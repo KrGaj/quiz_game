@@ -11,7 +11,7 @@ val databaseModule = module {
             androidApplication().applicationContext,
             QuizDatabase::class.java,
             QuizDatabase.DATABASE_NAME,
-        ).createFromAsset("database/quiz-database.db")
+        ).createFromAsset("database/${QuizDatabase.DATABASE_NAME}")
             .build()
     }
 

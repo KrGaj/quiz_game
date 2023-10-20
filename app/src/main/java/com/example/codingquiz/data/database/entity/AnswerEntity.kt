@@ -1,5 +1,6 @@
 package com.example.codingquiz.data.database.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -16,6 +17,6 @@ import androidx.room.PrimaryKey
 )
 data class AnswerEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val question: Int,
-    val correct: Boolean,
+    @ColumnInfo(name = "question") val question: Int,
+    @ColumnInfo(name = "correct") val correct: Boolean,
 )
