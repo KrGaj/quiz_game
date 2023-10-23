@@ -50,12 +50,16 @@ fun Category(
 ) {
     CodingQuizTheme {
         FilledTonalButton(
-            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
             onClick = onClick,
         ) {
             Text(
                 text = name,
-                modifier = Modifier.padding(8.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 style = typography.headlineMedium,
             )
