@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
@@ -22,17 +23,27 @@ import com.example.codingquiz.viewmodel.CategoryViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun CategoryGrid(
+fun CategoriesScreen(
     categoryViewModel: CategoryViewModel = koinViewModel(),
-    onItemClicked: (Category) -> Unit,
+    navigateOnItemClicked: (Category) -> Unit,
 ) {
     val categories = categoryViewModel.categories.collectAsState()
 
     CodingQuizTheme {
+        CategoryGrid(categories = categories.value, navigateOnItemClicked)
+    }
+}
+
+@Composable
+fun CategoryGrid(
+    categories: List<Category>,
+    onItemClicked: (Category) -> Unit,
+) {
+    CodingQuizTheme {
         LazyVerticalGrid(
             columns = GridCells.Fixed(count = CategoryViewModel.COLUMNS_NUM),
         ) {
-            items(categories.value) { item ->
+            items(categories) { item ->
                 Category(
                     name = item.name,
                 ) {
@@ -50,8 +61,9 @@ fun Category(
 ) {
     CodingQuizTheme {
         FilledTonalButton(
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
-                .padding(16.dp)
+                .padding(8.dp)
                 .fillMaxWidth(),
             onClick = onClick,
         ) {
@@ -75,8 +87,13 @@ private fun PreviewCategory() {
     }
 }
 
-//@Preview
-//@Composable
-//fun PreviewCategoryGrid() {
-//
-//}
+@Preview
+@Composable
+private fun PreviewCategoryGrid() {
+    CategoryGrid(listOf(
+        Category(0, "Category 1"),
+        Category(0, "Category 2"),
+        Category(0, "Category 3"),
+        Category(0, "Category 4"),
+    )) {}
+}

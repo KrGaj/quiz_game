@@ -9,12 +9,10 @@ class GivenAnswerRepository(
 ) {
     suspend fun insert(
         answer: GivenAnswer,
-    ) {
-        answerDao.insert(
-            AnswerEntity(
-                question = answer.question.id,
-                correct = answer.correct,
-            )
+    ) = answerDao.insert(
+        AnswerEntity(
+            question = answer.question.id,
+            correct = answer.correct,
         )
-    }
+    )
 }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilledTonalButton
@@ -34,6 +35,7 @@ fun QuestionScreen(
     questionViewModel: QuestionViewModel = koinViewModel(),
     givenAnswerViewModel: GivenAnswerViewModel = koinViewModel(),
     categoryId: Int?,
+    navigateToResults: () -> Unit,
 ) {
     val question = questionViewModel.question.collectAsState()
 
@@ -44,7 +46,13 @@ fun QuestionScreen(
             givenAnswerViewModel.addAnswer(GivenAnswer(
                 question = question.value,
                 correct = it.isCorrect,
-            ))
+            )) {
+                if (questionViewModel.isQuestionLast()) {
+                    navigateToResults()
+                } else {
+                    questionViewModel.nextQuestion()
+                }
+            }
         }
     }
 }
@@ -53,16 +61,19 @@ fun QuestionScreen(
 fun QuestionText(question: Question) {
     CodingQuizTheme {
         Card(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier
+                .padding(8.dp)
                 .fillMaxWidth()
                 .wrapContentHeight(),
         ) {
             Text(
                 text = question.text,
-                modifier = Modifier.padding(
-                    horizontal = 24.dp,
-                    vertical = 12.dp
-                ).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(
+                        horizontal = 24.dp,
+                        vertical = 12.dp
+                    )
+                    .fillMaxWidth(),
                 textAlign = TextAlign.Center,
             )
         }
@@ -107,13 +118,16 @@ fun PossibleAnswer(
 
     CodingQuizTheme {
         FilledTonalButton(
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(color),
             onClick = onClick,
         ) {
-            Text(text = answer.text)
+            Text(
+                text = answer.text,
+            )
         }
     }
 }

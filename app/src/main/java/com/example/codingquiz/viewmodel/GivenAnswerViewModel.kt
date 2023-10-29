@@ -9,9 +9,10 @@ import kotlinx.coroutines.launch
 class GivenAnswerViewModel(
     private val givenAnswerRepository: GivenAnswerRepository,
 ) : ViewModel() {
-    fun addAnswer(answer: GivenAnswer) {
+    fun addAnswer(answer: GivenAnswer, callback: () -> Unit) {
         viewModelScope.launch {
             givenAnswerRepository.insert(answer)
+            callback()
         }
     }
 }
