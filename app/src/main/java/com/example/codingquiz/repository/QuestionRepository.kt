@@ -37,6 +37,6 @@ class QuestionRepository(
             )
         }
 
-        return questions
+        return questions.shuffled()
     }
 }

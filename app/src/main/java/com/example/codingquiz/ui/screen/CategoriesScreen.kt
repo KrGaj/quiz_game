@@ -69,7 +69,7 @@ fun Category(
 
 @Preview
 @Composable
-fun PreviewCategory() {
+private fun PreviewCategory() {
     Box(modifier = Modifier.width(200.dp)) {
         Category(name = "Demo")
     }
