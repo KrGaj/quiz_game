@@ -1,6 +1,5 @@
 package com.example.codingquiz
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,10 +17,17 @@ import com.example.codingquiz.ui.screen.CategoriesScreen
 import com.example.codingquiz.ui.screen.QuestionScreen
 import com.example.codingquiz.ui.screen.QuizResultsScreen
 import com.example.codingquiz.ui.theme.CodingQuizTheme
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.Json
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val json = Json {
+            isLenient = true
+        }
+
         setContent {
             CodingQuizTheme {
                 // A surface container using the 'background' color from the theme
@@ -52,22 +58,21 @@ class MainActivity : ComponentActivity() {
                                 categoryId = backStackEntry.arguments
                                     ?.getInt(NavigationConstants.CATEGORY_ID_ARG)
                             ) {
-                                navController.navigate("${NavigationConstants.QUIZ_RESULTS_SCREEN}/$it")
+                                val resultsJson = json.encodeToString(ListSerializer(QuizResult.serializer()), it)
+                                navController.navigate("${NavigationConstants.QUIZ_RESULTS_SCREEN}/$resultsJson")
                             }
                         }
 
                         composable(
                             route = "${NavigationConstants.QUIZ_RESULTS_SCREEN}/{${NavigationConstants.QUIZ_RESULTS_ARG}}",
                             arguments = listOf(navArgument(NavigationConstants.QUIZ_RESULTS_ARG) {
-                                type = NavType.SerializableArrayType(QuizResult::class.java)
+                                type = NavType.StringType
                             }),
                         ) { backStackEntry ->
-                            val results = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                backStackEntry.arguments
-                                    ?.getSerializable(NavigationConstants.QUIZ_RESULTS_ARG, Array<QuizResult>::class.java) ?: emptyArray()
-                            } else {
-                                backStackEntry.arguments?.getSerializable(NavigationConstants.QUIZ_RESULTS_ARG) as? Array<QuizResult> ?: emptyArray()
-                            }
+                            val results = backStackEntry.arguments
+                                ?.getString(NavigationConstants.QUIZ_RESULTS_ARG)?.let {
+                                    json.decodeFromString<List<QuizResult>>(it)
+                                } ?: emptyList()
 
                             QuizResultsScreen(quizResults = results)
                         }

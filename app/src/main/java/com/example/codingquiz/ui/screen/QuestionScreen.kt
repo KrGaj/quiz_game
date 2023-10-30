@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.example.codingquiz.data.domain.GivenAnswer
 import com.example.codingquiz.data.domain.PossibleAnswer
 import com.example.codingquiz.data.domain.Question
+import com.example.codingquiz.data.domain.QuizResult
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 import com.example.codingquiz.viewmodel.GivenAnswerViewModel
 import com.example.codingquiz.viewmodel.QuestionViewModel
@@ -36,7 +37,7 @@ fun QuestionScreen(
     questionViewModel: QuestionViewModel = koinViewModel(),
     givenAnswerViewModel: GivenAnswerViewModel = koinViewModel(),
     categoryId: Int?,
-    navigateToResults: (Array<GivenAnswer>) -> Unit,
+    navigateToResults: (List<QuizResult>) -> Unit,
 ) {
     val question = questionViewModel.question.collectAsState()
     val isAnyAnswerChosen = remember {

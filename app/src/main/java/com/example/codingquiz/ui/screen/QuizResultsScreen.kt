@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.codingquiz.data.domain.GivenAnswer
-import com.example.codingquiz.data.domain.Question
 import com.example.codingquiz.data.domain.QuizResult
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 import com.example.codingquiz.viewmodel.QuizResultsViewModel
@@ -22,16 +20,16 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun QuizResultsScreen(
-    quizResults: Array<QuizResult>,
+    quizResults: List<QuizResult>,
     quizResultsViewModel: QuizResultsViewModel = koinViewModel { parametersOf(quizResults) },
 ) {
     CodingQuizTheme {
-        QuizResultsScreen(quizResults = quizResultsViewModel.quizResults)
+        QuizResultsList(results = quizResultsViewModel.quizResults)
     }
 }
 
 @Composable
-fun QuizResultsList(results: Array<GivenAnswer>) {
+fun QuizResultsList(results: List<QuizResult>) {
     CodingQuizTheme {
         LazyColumn {
             items(results) {
@@ -42,7 +40,7 @@ fun QuizResultsList(results: Array<GivenAnswer>) {
 }
 
 @Composable
-fun QuizResult(quizResult: GivenAnswer) {
+fun QuizResult(quizResult: QuizResult) {
     CodingQuizTheme {
         Card(
             modifier = Modifier
@@ -55,8 +53,8 @@ fun QuizResult(quizResult: GivenAnswer) {
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(text = quizResult.question.text)
-                Text(text = quizResult.correct.toString())
+                Text(text = quizResult.questionText)
+                Text(text = quizResult.isAnswerCorrect.toString())
             }
         }
     }
@@ -66,10 +64,9 @@ fun QuizResult(quizResult: GivenAnswer) {
 @Preview
 @Composable
 private fun PreviewQuizResult() {
-    QuizResult(quizResult = GivenAnswer(
-        Question(0, 0, "Demo Question 1",
-            listOf(com.example.codingquiz.data.domain.PossibleAnswer("A1", true))
-        ),
+    QuizResult(quizResult = QuizResult(
+        "Demo Question 1",
         false,
-    ))
+        )
+    )
 }

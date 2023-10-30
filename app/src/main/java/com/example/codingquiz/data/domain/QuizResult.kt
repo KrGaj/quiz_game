@@ -1,8 +1,9 @@
 package com.example.codingquiz.data.domain
 
-import java.io.Serializable
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class QuizResult(
-    val question: Question,
+    val questionText: String,
     val isAnswerCorrect: Boolean,
-) : Serializable
+)

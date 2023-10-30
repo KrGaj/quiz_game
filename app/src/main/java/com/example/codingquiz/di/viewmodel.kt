@@ -12,5 +12,5 @@ val viewModelModule = module {
     viewModel { CategoryViewModel(get()) }
     viewModel { QuestionViewModel(get()) }
     viewModel { GivenAnswerViewModel(get()) }
-    viewModel { (results: Array<QuizResult>) -> QuizResultsViewModel(results) }
+    viewModel { (results: List<QuizResult>) -> QuizResultsViewModel(results) }
 }
