@@ -9,9 +9,13 @@ import kotlinx.coroutines.launch
 class GivenAnswerViewModel(
     private val givenAnswerRepository: GivenAnswerRepository,
 ) : ViewModel() {
+    private val _quizResults = mutableListOf<GivenAnswer>()
+    val quizResults get() = _quizResults.toTypedArray()
+
     fun addAnswer(answer: GivenAnswer, callback: () -> Unit) {
         viewModelScope.launch {
             givenAnswerRepository.insert(answer)
+            _quizResults.add(answer)
             callback()
         }
     }

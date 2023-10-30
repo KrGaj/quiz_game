@@ -35,7 +35,7 @@ fun QuestionScreen(
     questionViewModel: QuestionViewModel = koinViewModel(),
     givenAnswerViewModel: GivenAnswerViewModel = koinViewModel(),
     categoryId: Int?,
-    navigateToResults: () -> Unit,
+    navigateToResults: (Array<GivenAnswer>) -> Unit,
 ) {
     val question = questionViewModel.question.collectAsState()
 
@@ -48,7 +48,7 @@ fun QuestionScreen(
                 correct = it.isCorrect,
             )) {
                 if (questionViewModel.isQuestionLast()) {
-                    navigateToResults()
+                    navigateToResults(givenAnswerViewModel.quizResults)
                 } else {
                     questionViewModel.nextQuestion()
                 }

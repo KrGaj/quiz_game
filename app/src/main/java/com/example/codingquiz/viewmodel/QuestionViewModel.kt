@@ -13,7 +13,7 @@ class QuestionViewModel(
 ) : ViewModel() {
     private var questions = emptyList<Question>()
     private var questionIterator = questions.iterator()
-    private val _question = MutableStateFlow(questionIterator.next())
+    private val _question = MutableStateFlow(Question(0, 0, "Questions not loaded yet", emptyList()))
     val question get() = _question.asStateFlow()
 
     fun fetchQuestions(categoryId: Int?) {
@@ -30,7 +30,7 @@ class QuestionViewModel(
         }
     }
 
-    fun isQuestionLast() = questionIterator.hasNext()
+    fun isQuestionLast() = !questionIterator.hasNext()
 
     fun nextQuestion() {
         if (!isQuestionLast()) {

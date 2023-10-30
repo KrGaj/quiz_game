@@ -1,5 +1,6 @@
 package com.example.codingquiz
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,6 +16,7 @@ import androidx.navigation.navArgument
 import com.example.codingquiz.data.domain.QuizResult
 import com.example.codingquiz.ui.screen.CategoriesScreen
 import com.example.codingquiz.ui.screen.QuestionScreen
+import com.example.codingquiz.ui.screen.QuizResultsScreen
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,7 +52,7 @@ class MainActivity : ComponentActivity() {
                                 categoryId = backStackEntry.arguments
                                     ?.getInt(NavigationConstants.CATEGORY_ID_ARG)
                             ) {
-                                navController.navigate("${NavigationConstants.QUIZ_RESULTS_SCREEN}")
+                                navController.navigate("${NavigationConstants.QUIZ_RESULTS_SCREEN}/$it")
                             }
                         }
 
@@ -59,8 +61,15 @@ class MainActivity : ComponentActivity() {
                             arguments = listOf(navArgument(NavigationConstants.QUIZ_RESULTS_ARG) {
                                 type = NavType.SerializableArrayType(QuizResult::class.java)
                             }),
-                        ) {
-                            // TODO show results
+                        ) { backStackEntry ->
+                            val results = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                backStackEntry.arguments
+                                    ?.getSerializable(NavigationConstants.QUIZ_RESULTS_ARG, Array<QuizResult>::class.java) ?: emptyArray()
+                            } else {
+                                backStackEntry.arguments?.getSerializable(NavigationConstants.QUIZ_RESULTS_ARG) as? Array<QuizResult> ?: emptyArray()
+                            }
+
+                            QuizResultsScreen(quizResults = results)
                         }
                     }
                 }
