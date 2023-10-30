@@ -1,5 +1,6 @@
 package com.example.codingquiz.ui.screen
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -38,19 +39,33 @@ fun QuestionScreen(
     navigateToResults: (Array<GivenAnswer>) -> Unit,
 ) {
     val question = questionViewModel.question.collectAsState()
+    val isAnyAnswerChosen = remember {
+        mutableStateOf(false)
+    }
 
     CodingQuizTheme {
         LaunchedEffect(Unit) { questionViewModel.fetchQuestions(categoryId) }
-        QuestionText(question.value)
-        AnswersGrid(answers = question.value.answers) {
-            givenAnswerViewModel.addAnswer(GivenAnswer(
-                question = question.value,
-                correct = it.isCorrect,
-            )) {
-                if (questionViewModel.isQuestionLast()) {
-                    navigateToResults(givenAnswerViewModel.quizResults)
-                } else {
-                    questionViewModel.nextQuestion()
+        Column {
+            QuestionText(question.value)
+            AnswersGrid(
+                answers = question.value.answers,
+                isAnyAnswerChosen,
+            ) {
+                if (!isAnyAnswerChosen.value) {
+                    isAnyAnswerChosen.value = true
+                    givenAnswerViewModel.addAnswer(
+                        GivenAnswer(
+                            question = question.value,
+                            correct = it.isCorrect,
+                        )
+                    ) {
+                        if (questionViewModel.isQuestionLast()) {
+                            navigateToResults(givenAnswerViewModel.quizResults)
+                        } else {
+                            isAnyAnswerChosen.value = false
+                            questionViewModel.nextQuestion()
+                        }
+                    }
                 }
             }
         }
@@ -83,23 +98,21 @@ fun QuestionText(question: Question) {
 @Composable
 fun AnswersGrid(
     answers: List<PossibleAnswer>,
+    isAnyAnswerChosen: State<Boolean>,
     onClick: (PossibleAnswer) -> Unit,
 ) {
-    val isAnyAnswerChosen = remember {
-        mutableStateOf(false)
-    }
-
     CodingQuizTheme {
         LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             items(answers) {
+                val color = if (isAnyAnswerChosen.value && it.isCorrect) Color.Green
+                    else if (isAnyAnswerChosen.value && !it.isCorrect) Color.Red
+                    else Color.Gray
+
                 PossibleAnswer(
                     answer = it,
-                    isAnyAnswerChosen = isAnyAnswerChosen,
+                    color,
                 ) {
-                    if (!isAnyAnswerChosen.value) {
-                        isAnyAnswerChosen.value = true
-                        onClick(it)
-                    }
+                    onClick(it)
                 }
             }
         }
@@ -109,13 +122,9 @@ fun AnswersGrid(
 @Composable
 fun PossibleAnswer(
     answer: PossibleAnswer,
-    isAnyAnswerChosen: State<Boolean>,
+    color: Color,
     onClick: () -> Unit,
 ) {
-    val color = if (isAnyAnswerChosen.value && answer.isCorrect) Color.Green
-        else if (isAnyAnswerChosen.value && !answer.isCorrect) Color.Red
-        else Color.Gray
-
     CodingQuizTheme {
         FilledTonalButton(
             shape = RoundedCornerShape(12.dp),
@@ -154,8 +163,11 @@ private fun PreviewQuestionText() {
 @Preview
 @Composable
 private fun PreviewAnswers() {
+    val isAnyAnswerChosen = remember { mutableStateOf(false) }
+
     CodingQuizTheme {
         AnswersGrid(
+            isAnyAnswerChosen = isAnyAnswerChosen,
             answers = listOf(
                 PossibleAnswer("Demo Answer 1", false),
                 PossibleAnswer("Demo Answer 2", false),
