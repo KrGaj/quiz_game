@@ -1,6 +1,7 @@
 package com.example.codingquiz.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.codingquiz.R
@@ -26,12 +28,49 @@ fun QuizResultsScreen(
     quizResultsViewModel: QuizResultsViewModel = koinViewModel { parametersOf(quizResults) },
 ) {
     CodingQuizTheme {
-        QuizResultsList(results = quizResultsViewModel.quizResults)
+        Column {
+            Score(
+                correctAnswers = quizResultsViewModel.correctAnswersCount,
+                allAnswers = quizResultsViewModel.answersCount,
+            )
+            QuizResultsList(results = quizResultsViewModel.quizResults)
+            Column {
+
+            }
+        }
     }
 }
 
 @Composable
-fun QuizResultsList(results: List<QuizResult>) {
+private fun Score(
+    correctAnswers: Int,
+    allAnswers: Int,
+) {
+    CodingQuizTheme {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            val scoreText = LocalContext.current.getString(
+                R.string.quiz_results_score,
+                correctAnswers,
+                allAnswers,
+            )
+            
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                text = scoreText,
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+}
+
+@Composable
+private fun QuizResultsList(results: List<QuizResult>) {
     CodingQuizTheme {
         LazyColumn {
             items(results) {
@@ -42,7 +81,7 @@ fun QuizResultsList(results: List<QuizResult>) {
 }
 
 @Composable
-fun QuizResult(quizResult: QuizResult) {
+private fun QuizResult(quizResult: QuizResult) {
     CodingQuizTheme {
         Card(
             modifier = Modifier
@@ -71,6 +110,17 @@ fun QuizResult(quizResult: QuizResult) {
     }
 }
 
+@Composable
+private fun FinishButton() {
+
+}
+
+
+@Preview
+@Composable
+private fun PreviewScore() {
+    Score(correctAnswers = 21, allAnswers = 37)
+}
 
 @Preview
 @Composable

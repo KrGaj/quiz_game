@@ -74,7 +74,7 @@ fun QuestionScreen(
 }
 
 @Composable
-fun QuestionText(question: Question) {
+private fun QuestionText(question: Question) {
     CodingQuizTheme {
         Card(
             modifier = Modifier
@@ -97,7 +97,7 @@ fun QuestionText(question: Question) {
 }
 
 @Composable
-fun AnswersGrid(
+private fun AnswersGrid(
     answers: List<PossibleAnswer>,
     isAnyAnswerChosen: State<Boolean>,
     onClick: (PossibleAnswer) -> Unit,
@@ -121,7 +121,7 @@ fun AnswersGrid(
 }
 
 @Composable
-fun PossibleAnswer(
+private fun PossibleAnswer(
     answer: PossibleAnswer,
     color: Color,
     onClick: () -> Unit,

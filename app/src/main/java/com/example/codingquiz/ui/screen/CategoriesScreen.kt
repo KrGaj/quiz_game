@@ -35,7 +35,7 @@ fun CategoriesScreen(
 }
 
 @Composable
-fun CategoryGrid(
+private fun CategoryGrid(
     categories: List<Category>,
     onItemClicked: (Category) -> Unit,
 ) {
@@ -55,7 +55,7 @@ fun CategoryGrid(
 }
 
 @Composable
-fun Category(
+private fun Category(
     name: String,
     onClick: () -> Unit = {},
 ) {
