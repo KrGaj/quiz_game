@@ -10,8 +10,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.codingquiz.R
 import com.example.codingquiz.data.domain.QuizResult
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 import com.example.codingquiz.viewmodel.QuizResultsViewModel
@@ -53,8 +55,17 @@ fun QuizResult(quizResult: QuizResult) {
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(text = quizResult.questionText)
-                Text(text = quizResult.isAnswerCorrect.toString())
+                Text(
+                    modifier = Modifier.weight(0.7f),
+                    text = quizResult.questionText,
+                )
+
+                val answerResult = LocalContext.current.getString(
+                    if (quizResult.isAnswerCorrect) R.string.quiz_results_correct
+                    else R.string.quiz_results_wrong
+                )
+
+                Text(text = answerResult)
             }
         }
     }

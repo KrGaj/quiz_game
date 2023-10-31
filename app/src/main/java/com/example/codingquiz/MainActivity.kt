@@ -1,5 +1,6 @@
 package com.example.codingquiz
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,21 +13,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.codingquiz.data.domain.QuizResult
+import com.example.codingquiz.data.domain.QuizResults
 import com.example.codingquiz.ui.screen.CategoriesScreen
 import com.example.codingquiz.ui.screen.QuestionScreen
 import com.example.codingquiz.ui.screen.QuizResultsScreen
 import com.example.codingquiz.ui.theme.CodingQuizTheme
-import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val json = Json {
-            isLenient = true
-        }
 
         setContent {
             CodingQuizTheme {
@@ -58,7 +55,7 @@ class MainActivity : ComponentActivity() {
                                 categoryId = backStackEntry.arguments
                                     ?.getInt(NavigationConstants.CATEGORY_ID_ARG)
                             ) {
-                                val resultsJson = json.encodeToString(ListSerializer(QuizResult.serializer()), it)
+                                val resultsJson = Uri.encode(Json.encodeToString(QuizResults(it)))
                                 navController.navigate("${NavigationConstants.QUIZ_RESULTS_SCREEN}/$resultsJson")
                             }
                         }
@@ -66,13 +63,16 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = "${NavigationConstants.QUIZ_RESULTS_SCREEN}/{${NavigationConstants.QUIZ_RESULTS_ARG}}",
                             arguments = listOf(navArgument(NavigationConstants.QUIZ_RESULTS_ARG) {
-                                type = NavType.StringType
+                                type = QuizResultNavType()
                             }),
                         ) { backStackEntry ->
-                            val results = backStackEntry.arguments
-                                ?.getString(NavigationConstants.QUIZ_RESULTS_ARG)?.let {
-                                    json.decodeFromString<List<QuizResult>>(it)
-                                } ?: emptyList()
+                            val results = backStackEntry.arguments?.let {
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                                    it.getParcelable(NavigationConstants.QUIZ_RESULTS_ARG, QuizResults::class.java)
+                                } else {
+                                    it.getParcelable(NavigationConstants.QUIZ_RESULTS_ARG)
+                                }
+                            }?.results ?: emptyList()
 
                             QuizResultsScreen(quizResults = results)
                         }
