@@ -40,6 +40,7 @@ import org.koin.androidx.compose.koinViewModel
 
 class AnswerState {
     var isAnyAnswerChosen: Boolean by mutableStateOf(false)
+    var isTimeOut: Boolean by mutableStateOf(false)
 }
 
 @Composable
@@ -60,6 +61,7 @@ fun QuestionScreen(
             navigateToResults(givenAnswerViewModel.quizResults)
         } else {
             answerState.isAnyAnswerChosen = false
+            answerState.isTimeOut = false
             questionViewModel.nextQuestion()
         }
     }
@@ -77,6 +79,7 @@ fun QuestionScreen(
             AnswersGrid(
                 answers = question.answers,
                 { answerState.isAnyAnswerChosen },
+                { answerState.isTimeOut },
             ) {
                 if (!answerState.isAnyAnswerChosen) {
                     answerState.isAnyAnswerChosen = true
@@ -94,6 +97,7 @@ fun QuestionScreen(
     }
 
     if (timeLeft == 0L) {
+        answerState.isTimeOut = true
         givenAnswerViewModel.addAnswer(
             answer = GivenAnswer(
                 question = question,
@@ -131,13 +135,16 @@ private fun QuestionText(question: Question) {
 private fun AnswersGrid(
     answers: List<PossibleAnswer>,
     isAnyAnswerChosen: () -> Boolean,
+    isTimeOut: () -> Boolean,
     onClick: (PossibleAnswer) -> Unit,
 ) {
     CodingQuizTheme {
         LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             items(answers) {
-                val color = if (isAnyAnswerChosen() && it.isCorrect) Color.Green
-                    else if (isAnyAnswerChosen() && !it.isCorrect) Color.Red
+                val shouldChangeColor = (isAnyAnswerChosen() || isTimeOut())
+
+                val color = if (shouldChangeColor && it.isCorrect) Color.Green
+                    else if (shouldChangeColor && !it.isCorrect) Color.Red
                     else Color.Gray
 
                 PossibleAnswer(
@@ -216,10 +223,12 @@ private fun PreviewQuestionText() {
 @Composable
 private fun PreviewAnswers() {
     val isAnyAnswerChosen by remember { mutableStateOf(false) }
+    val isTimeOut by remember { mutableStateOf(false) }
 
     CodingQuizTheme {
         AnswersGrid(
             isAnyAnswerChosen = { isAnyAnswerChosen },
+            isTimeOut = { isTimeOut },
             answers = listOf(
                 PossibleAnswer("Demo Answer 1", false),
                 PossibleAnswer("Demo Answer 2", false),
