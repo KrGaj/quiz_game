@@ -41,6 +41,14 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = NavigationConstants.CATEGORIES_SCREEN,
                     ) {
+                        val backToCategoriesInclusive = {
+                            navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
+                                popUpTo(NavigationConstants.QUIZ_RESULTS_SCREEN) {
+                                    inclusive = true
+                                }
+                            }
+                        }
+
                         composable(
                             route = NavigationConstants.CATEGORIES_SCREEN,
                         ) {
@@ -101,16 +109,9 @@ class MainActivity : ComponentActivity() {
 
                             QuizResultsScreen(
                                 quizResults = results,
-                                onBackPressed = {
-                                    navController.navigate(NavigationConstants.EXIT_QUIZ_DIALOG)
-                                }
-                            ) {
-                                navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
-                                    popUpTo(NavigationConstants.QUIZ_RESULTS_SCREEN) {
-                                        inclusive = true
-                                    }
-                                }
-                            }
+                                onBackPressed = backToCategoriesInclusive,
+                                navigateToCategories = backToCategoriesInclusive,
+                            )
                         }
                         
                         dialog(
