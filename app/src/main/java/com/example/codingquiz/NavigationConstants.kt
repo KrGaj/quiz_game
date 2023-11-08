@@ -6,4 +6,6 @@ object NavigationConstants {
     const val QUESTION_SCREEN = "QuestionScreen"
     const val QUIZ_RESULTS_SCREEN = "QuizResultsScreen"
     const val QUIZ_RESULTS_ARG = "quizResults"
+    const val EXIT_QUIZ_DIALOG = "ExitQuizDialog"
+    const val EXIT_APP_DIALOG = "ExitAppDialog"
 }

@@ -8,12 +8,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.codingquiz.data.domain.QuizResults
+import com.example.codingquiz.ui.dialogs.ExitAppDialog
+import com.example.codingquiz.ui.dialogs.ExitQuizDialog
 import com.example.codingquiz.ui.screen.CategoriesScreen
 import com.example.codingquiz.ui.screen.QuestionScreen
 import com.example.codingquiz.ui.screen.QuizResultsScreen
@@ -40,8 +44,20 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = NavigationConstants.CATEGORIES_SCREEN,
                         ) {
-                            CategoriesScreen {
-                                navController.navigate("${NavigationConstants.QUESTION_SCREEN}/${it.id}")
+                            CategoriesScreen(
+                                onBackPressed = {
+                                    navController.navigate(NavigationConstants.EXIT_APP_DIALOG)
+                                }
+                            ) {
+                                navController.navigate(
+                                    route = "${NavigationConstants.QUESTION_SCREEN}/${it.id}",
+                                ) {
+                                    popUpTo(
+                                        NavigationConstants.CATEGORIES_SCREEN,
+                                    ) {
+                                        inclusive = true
+                                    }
+                                }
                             }
                         }
 
@@ -53,10 +69,19 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             QuestionScreen(
                                 categoryId = backStackEntry.arguments
-                                    ?.getInt(NavigationConstants.CATEGORY_ID_ARG)
+                                    ?.getInt(NavigationConstants.CATEGORY_ID_ARG),
+                                onBackPressed = {
+                                    navController.navigate(NavigationConstants.EXIT_QUIZ_DIALOG)
+                                }
                             ) {
                                 val resultsJson = Uri.encode(Json.encodeToString(QuizResults(it)))
-                                navController.navigate("${NavigationConstants.QUIZ_RESULTS_SCREEN}/$resultsJson")
+                                navController.navigate(
+                                    route = "${NavigationConstants.QUIZ_RESULTS_SCREEN}/$resultsJson"
+                                ) {
+                                    popUpTo(NavigationConstants.QUESTION_SCREEN) {
+                                        inclusive = true
+                                    }
+                                }
                             }
                         }
 
@@ -74,9 +99,52 @@ class MainActivity : ComponentActivity() {
                                 }
                             }?.results ?: emptyList()
 
-                            QuizResultsScreen(quizResults = results) {
-                                navController.navigate(NavigationConstants.CATEGORIES_SCREEN)
+                            QuizResultsScreen(
+                                quizResults = results,
+                                onBackPressed = {
+                                    navController.navigate(NavigationConstants.EXIT_QUIZ_DIALOG)
+                                }
+                            ) {
+                                navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
+                                    popUpTo(NavigationConstants.QUIZ_RESULTS_SCREEN) {
+                                        inclusive = true
+                                    }
+                                }
                             }
+                        }
+                        
+                        dialog(
+                            route = NavigationConstants.EXIT_QUIZ_DIALOG,
+                            dialogProperties = DialogProperties(
+                                dismissOnBackPress = true,
+                                dismissOnClickOutside = true,
+                            )
+                        ) {
+                            ExitQuizDialog(
+                                onDismissRequest = { navController.popBackStack() },
+                                onConfirmation = {
+                                    navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
+                                        popUpTo(NavigationConstants.QUESTION_SCREEN) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
+                        }
+
+                        dialog(
+                            route = NavigationConstants.EXIT_APP_DIALOG,
+                            dialogProperties = DialogProperties(
+                                dismissOnBackPress = true,
+                                dismissOnClickOutside = true,
+                            )
+                        ) {
+                            ExitAppDialog(
+                                onDismissRequest = { navController.popBackStack() },
+                                onConfirmation = {
+                                    finish()
+                                }
+                            )
                         }
                     }
                 }

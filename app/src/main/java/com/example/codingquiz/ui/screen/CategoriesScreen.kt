@@ -1,5 +1,6 @@
 package com.example.codingquiz.ui.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,9 +26,14 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CategoriesScreen(
     categoryViewModel: CategoryViewModel = koinViewModel(),
+    onBackPressed: () -> Unit,
     navigateOnItemClicked: (Category) -> Unit,
 ) {
     val categories = categoryViewModel.categories.collectAsState()
+
+    BackHandler {
+        onBackPressed()
+    }
 
     CodingQuizTheme {
         CategoryGrid(categories = categories.value, navigateOnItemClicked)

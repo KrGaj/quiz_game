@@ -10,4 +10,7 @@
     <string name="quiz_results_correct">Correct</string>
     <string name="quiz_results_wrong">Wrong</string>
     <string name="quiz_results_finish">Finish</string>
+
+    <string name="quiz_exit_message">Are you sure want to quit this quiz?</string>
+    <string name="app_exit_message">Are you sure want to exit this app?</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.codingquiz.ui.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,8 +28,13 @@ import org.koin.core.parameter.parametersOf
 fun QuizResultsScreen(
     quizResults: List<QuizResult>,
     quizResultsViewModel: QuizResultsViewModel = koinViewModel { parametersOf(quizResults) },
+    onBackPressed: () -> Unit,
     navigateToCategories: () -> Unit,
 ) {
+    BackHandler {
+        onBackPressed()
+    }
+
     CodingQuizTheme {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,

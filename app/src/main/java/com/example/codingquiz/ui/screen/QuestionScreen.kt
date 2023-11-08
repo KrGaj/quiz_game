@@ -1,5 +1,6 @@
 package com.example.codingquiz.ui.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,6 +47,7 @@ fun QuestionScreen(
     questionViewModel: QuestionViewModel = koinViewModel(),
     givenAnswerViewModel: GivenAnswerViewModel = koinViewModel(),
     categoryId: Int?,
+    onBackPressed: () -> Unit,
     navigateToResults: (List<QuizResult>) -> Unit,
 ) {
     val question by questionViewModel.question.collectAsState()
@@ -60,6 +62,10 @@ fun QuestionScreen(
             answerState.isAnyAnswerChosen = false
             questionViewModel.nextQuestion()
         }
+    }
+
+    BackHandler {
+        onBackPressed()
     }
 
     CodingQuizTheme {
