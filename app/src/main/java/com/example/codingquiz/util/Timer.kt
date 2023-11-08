@@ -18,6 +18,7 @@ object Timer {
     val timeLeft get() = _timeLeft.asStateFlow()
 
     fun start(timeout: Duration) {
+        timer?.cancel()
         timer = scope.launch {
             for (time in (timeout.inWholeSeconds downTo 0)) {
                 _timeLeft.value = time

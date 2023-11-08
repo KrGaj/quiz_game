@@ -48,7 +48,7 @@ fun QuestionScreen(
     questionViewModel: QuestionViewModel = koinViewModel(),
     givenAnswerViewModel: GivenAnswerViewModel = koinViewModel(),
     categoryId: Int?,
-    onBackPressed: () -> Unit,
+    onBackPressed: (List<QuizResult>) -> Unit,
     navigateToResults: (List<QuizResult>) -> Unit,
 ) {
     val question by questionViewModel.question.collectAsState()
@@ -67,7 +67,7 @@ fun QuestionScreen(
     }
 
     BackHandler {
-        onBackPressed()
+        onBackPressed(givenAnswerViewModel.quizResults)
     }
 
     CodingQuizTheme {

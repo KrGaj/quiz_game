@@ -9,12 +9,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.codingquiz.data.domain.QuizResult
 import com.example.codingquiz.data.domain.QuizResults
 import com.example.codingquiz.ui.dialogs.ExitAppDialog
 import com.example.codingquiz.ui.dialogs.ExitQuizDialog
@@ -41,14 +44,6 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = NavigationConstants.CATEGORIES_SCREEN,
                     ) {
-                        val backToCategoriesInclusive = {
-                            navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
-                                popUpTo(NavigationConstants.QUIZ_RESULTS_SCREEN) {
-                                    inclusive = true
-                                }
-                            }
-                        }
-
                         composable(
                             route = NavigationConstants.CATEGORIES_SCREEN,
                         ) {
@@ -79,18 +74,11 @@ class MainActivity : ComponentActivity() {
                                 categoryId = backStackEntry.arguments
                                     ?.getInt(NavigationConstants.CATEGORY_ID_ARG),
                                 onBackPressed = {
-                                    navController.navigate(NavigationConstants.EXIT_QUIZ_DIALOG)
-                                }
-                            ) {
-                                val resultsJson = Uri.encode(Json.encodeToString(QuizResults(it)))
-                                navController.navigate(
-                                    route = "${NavigationConstants.QUIZ_RESULTS_SCREEN}/$resultsJson"
-                                ) {
-                                    popUpTo(NavigationConstants.QUESTION_SCREEN) {
-                                        inclusive = true
-                                    }
-                                }
-                            }
+                                    val resultsJson = Uri.encode(Json.encodeToString(QuizResults(it)))
+                                    navController.navigate("${NavigationConstants.EXIT_QUIZ_DIALOG}/$resultsJson")
+                                },
+                                navigateToResults = { navigateToResultsScreen(it, navController) },
+                            )
                         }
 
                         composable(
@@ -99,35 +87,38 @@ class MainActivity : ComponentActivity() {
                                 type = QuizResultNavType()
                             }),
                         ) { backStackEntry ->
-                            val results = backStackEntry.arguments?.let {
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                                    it.getParcelable(NavigationConstants.QUIZ_RESULTS_ARG, QuizResults::class.java)
-                                } else {
-                                    it.getParcelable(NavigationConstants.QUIZ_RESULTS_ARG)
-                                }
-                            }?.results ?: emptyList()
+                            val results = deserializeQuizResults(backStackEntry)
 
                             QuizResultsScreen(
                                 quizResults = results,
-                                onBackPressed = backToCategoriesInclusive,
-                                navigateToCategories = backToCategoriesInclusive,
+                                onBackPressed = { backToCategoriesInclusive(navController) },
+                                navigateToCategories = { backToCategoriesInclusive(navController) },
                             )
                         }
                         
                         dialog(
-                            route = NavigationConstants.EXIT_QUIZ_DIALOG,
+                            route = "${NavigationConstants.EXIT_QUIZ_DIALOG}/{${NavigationConstants.QUIZ_RESULTS_ARG}}",
                             dialogProperties = DialogProperties(
                                 dismissOnBackPress = true,
                                 dismissOnClickOutside = true,
-                            )
-                        ) {
+                            ),
+                            arguments = listOf(navArgument(NavigationConstants.QUIZ_RESULTS_ARG) {
+                                type = QuizResultNavType()
+                            })
+                        ) { backStackEntry ->
+                            val results = deserializeQuizResults(backStackEntry)
+
                             ExitQuizDialog(
                                 onDismissRequest = { navController.popBackStack() },
                                 onConfirmation = {
-                                    navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
-                                        popUpTo(NavigationConstants.QUESTION_SCREEN) {
-                                            inclusive = true
+                                    if (results.isEmpty()) {
+                                        navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
+                                            popUpTo(NavigationConstants.QUESTION_SCREEN) {
+                                                inclusive = true
+                                            }
                                         }
+                                    } else {
+                                        navigateToResultsScreen(results, navController)
                                     }
                                 }
                             )
@@ -152,4 +143,32 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun navigateToResultsScreen(results: List<QuizResult>, navController: NavController) {
+        val resultsJson = Uri.encode(Json.encodeToString(QuizResults(results)))
+        navController.navigate(
+            route = "${NavigationConstants.QUIZ_RESULTS_SCREEN}/$resultsJson"
+        ) {
+            popUpTo(NavigationConstants.QUESTION_SCREEN) {
+                inclusive = true
+            }
+        }
+    }
+
+    private fun backToCategoriesInclusive(navController: NavController) {
+        navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
+            popUpTo(NavigationConstants.QUIZ_RESULTS_SCREEN) {
+                inclusive = true
+            }
+        }
+    }
+
+    private fun deserializeQuizResults(backStackEntry: NavBackStackEntry): List<QuizResult> =
+        backStackEntry.arguments?.let {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                it.getParcelable(NavigationConstants.QUIZ_RESULTS_ARG, QuizResults::class.java)
+            } else {
+                it.getParcelable(NavigationConstants.QUIZ_RESULTS_ARG)
+            }
+        }?.results ?: emptyList()
 }
