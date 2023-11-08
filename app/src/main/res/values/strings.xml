@@ -1,7 +1,13 @@
 <resources>
     <string name="app_name">CodingQuiz</string>
 
+    <plurals name="question_time_left">
+        <item quantity="one">%1$d second left</item>
+        <item quantity="other">%1$d seconds left</item>
+    </plurals>
+
     <string name="quiz_results_score">Your score: %1$d/%2$d</string>
     <string name="quiz_results_correct">Correct</string>
     <string name="quiz_results_wrong">Wrong</string>
+    <string name="quiz_results_finish">Finish</string>
 </resources>

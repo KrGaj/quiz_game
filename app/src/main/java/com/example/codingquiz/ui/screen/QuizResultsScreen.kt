@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,17 +28,18 @@ import org.koin.core.parameter.parametersOf
 fun QuizResultsScreen(
     quizResults: List<QuizResult>,
     quizResultsViewModel: QuizResultsViewModel = koinViewModel { parametersOf(quizResults) },
+    navigateToCategories: () -> Unit,
 ) {
     CodingQuizTheme {
-        Column {
+        Column(
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
             Score(
                 correctAnswers = quizResultsViewModel.correctAnswersCount,
                 allAnswers = quizResultsViewModel.answersCount,
             )
             QuizResultsList(results = quizResultsViewModel.quizResults)
-            Column {
-
-            }
+            FinishButton(navigateToCategories)
         }
     }
 }
@@ -99,8 +102,8 @@ private fun QuizResult(quizResult: QuizResult) {
                     text = quizResult.questionText,
                 )
 
-                val answerResult = LocalContext.current.getString(
-                    if (quizResult.isAnswerCorrect) R.string.quiz_results_correct
+                val answerResult = stringResource(
+                    id = if (quizResult.isAnswerCorrect) R.string.quiz_results_correct
                     else R.string.quiz_results_wrong
                 )
 
@@ -111,8 +114,17 @@ private fun QuizResult(quizResult: QuizResult) {
 }
 
 @Composable
-private fun FinishButton() {
-
+private fun FinishButton(navigateToCategories: () -> Unit) {
+    CodingQuizTheme {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            FilledTonalButton(onClick = navigateToCategories) {
+                Text(text = stringResource(id = R.string.quiz_results_finish))
+            }
+        }
+    }
 }
 
 
@@ -130,4 +142,10 @@ private fun PreviewQuizResult() {
         false,
         )
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewFinishButton() {
+    FinishButton {}
 }

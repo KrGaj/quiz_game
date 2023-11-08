@@ -74,7 +74,9 @@ class MainActivity : ComponentActivity() {
                                 }
                             }?.results ?: emptyList()
 
-                            QuizResultsScreen(quizResults = results)
+                            QuizResultsScreen(quizResults = results) {
+                                navController.navigate(NavigationConstants.CATEGORIES_SCREEN)
+                            }
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 package com.example.codingquiz.ui.screen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,15 +15,19 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.codingquiz.R
 import com.example.codingquiz.data.domain.GivenAnswer
 import com.example.codingquiz.data.domain.PossibleAnswer
 import com.example.codingquiz.data.domain.Question
@@ -32,6 +37,10 @@ import com.example.codingquiz.viewmodel.GivenAnswerViewModel
 import com.example.codingquiz.viewmodel.QuestionViewModel
 import org.koin.androidx.compose.koinViewModel
 
+class AnswerState {
+    var isAnyAnswerChosen: Boolean by mutableStateOf(false)
+}
+
 @Composable
 fun QuestionScreen(
     questionViewModel: QuestionViewModel = koinViewModel(),
@@ -39,37 +48,53 @@ fun QuestionScreen(
     categoryId: Int?,
     navigateToResults: (List<QuizResult>) -> Unit,
 ) {
-    val question = questionViewModel.question.collectAsState()
-    val isAnyAnswerChosen = remember {
-        mutableStateOf(false)
+    val question by questionViewModel.question.collectAsState()
+    val answerState = remember {
+        AnswerState()
+    }
+    val timeLeft by questionViewModel.timeLeft.collectAsState()
+    val answerAddCallback = {
+        if (questionViewModel.isQuestionLast()) {
+            navigateToResults(givenAnswerViewModel.quizResults)
+        } else {
+            answerState.isAnyAnswerChosen = false
+            questionViewModel.nextQuestion()
+        }
     }
 
     CodingQuizTheme {
         LaunchedEffect(Unit) { questionViewModel.fetchQuestions(categoryId) }
-        Column {
-            QuestionText(question.value)
+        Column(
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            QuestionText(question)
             AnswersGrid(
-                answers = question.value.answers,
-                isAnyAnswerChosen,
+                answers = question.answers,
+                { answerState.isAnyAnswerChosen },
             ) {
-                if (!isAnyAnswerChosen.value) {
-                    isAnyAnswerChosen.value = true
+                if (!answerState.isAnyAnswerChosen) {
+                    answerState.isAnyAnswerChosen = true
                     givenAnswerViewModel.addAnswer(
-                        GivenAnswer(
-                            question = question.value,
+                        answer = GivenAnswer(
+                            question = question,
                             correct = it.isCorrect,
-                        )
-                    ) {
-                        if (questionViewModel.isQuestionLast()) {
-                            navigateToResults(givenAnswerViewModel.quizResults)
-                        } else {
-                            isAnyAnswerChosen.value = false
-                            questionViewModel.nextQuestion()
-                        }
-                    }
+                        ),
+                        callback = answerAddCallback,
+                    )
                 }
             }
+            Timer(timeLeft = timeLeft)
         }
+    }
+
+    if (timeLeft == 0L) {
+        givenAnswerViewModel.addAnswer(
+            answer = GivenAnswer(
+                question = question,
+                correct = false,
+            ),
+            callback = answerAddCallback,
+        )
     }
 }
 
@@ -99,14 +124,14 @@ private fun QuestionText(question: Question) {
 @Composable
 private fun AnswersGrid(
     answers: List<PossibleAnswer>,
-    isAnyAnswerChosen: State<Boolean>,
+    isAnyAnswerChosen: () -> Boolean,
     onClick: (PossibleAnswer) -> Unit,
 ) {
     CodingQuizTheme {
         LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             items(answers) {
-                val color = if (isAnyAnswerChosen.value && it.isCorrect) Color.Green
-                    else if (isAnyAnswerChosen.value && !it.isCorrect) Color.Red
+                val color = if (isAnyAnswerChosen() && it.isCorrect) Color.Green
+                    else if (isAnyAnswerChosen() && !it.isCorrect) Color.Red
                     else Color.Gray
 
                 PossibleAnswer(
@@ -142,6 +167,26 @@ private fun PossibleAnswer(
     }
 }
 
+@Composable
+private fun Timer(timeLeft: Long) {
+    CodingQuizTheme {
+        val timeLeftText = pluralStringResource(
+            id = R.plurals.question_time_left,
+            count = timeLeft.toInt(),
+            timeLeft.toInt(),
+        )
+
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            text = timeLeftText,
+            textAlign = TextAlign.Center,
+            fontSize = 24.sp,
+        )
+    }
+}
+
 
 @Preview
 @Composable
@@ -164,11 +209,11 @@ private fun PreviewQuestionText() {
 @Preview
 @Composable
 private fun PreviewAnswers() {
-    val isAnyAnswerChosen = remember { mutableStateOf(false) }
+    val isAnyAnswerChosen by remember { mutableStateOf(false) }
 
     CodingQuizTheme {
         AnswersGrid(
-            isAnyAnswerChosen = isAnyAnswerChosen,
+            isAnyAnswerChosen = { isAnyAnswerChosen },
             answers = listOf(
                 PossibleAnswer("Demo Answer 1", false),
                 PossibleAnswer("Demo Answer 2", false),
@@ -176,5 +221,13 @@ private fun PreviewAnswers() {
                 PossibleAnswer("Demo Answer 4", true),
             )
         ) {}
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewTimer() {
+    CodingQuizTheme {
+        Timer(timeLeft = 2137)
     }
 }

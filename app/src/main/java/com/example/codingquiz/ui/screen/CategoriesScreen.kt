@@ -39,16 +39,14 @@ private fun CategoryGrid(
     categories: List<Category>,
     onItemClicked: (Category) -> Unit,
 ) {
-    CodingQuizTheme {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(count = CategoryViewModel.COLUMNS_NUM),
-        ) {
-            items(categories) { item ->
-                Category(
-                    name = item.name,
-                ) {
-                    onItemClicked(item)
-                }
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(count = CategoryViewModel.COLUMNS_NUM),
+    ) {
+        items(categories) { item ->
+            Category(
+                name = item.name,
+            ) {
+                onItemClicked(item)
             }
         }
     }
@@ -59,41 +57,45 @@ private fun Category(
     name: String,
     onClick: () -> Unit = {},
 ) {
-    CodingQuizTheme {
-        FilledTonalButton(
-            shape = RoundedCornerShape(12.dp),
+    FilledTonalButton(
+        shape = RoundedCornerShape(12.dp),
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
+        onClick = onClick,
+    ) {
+        Text(
+            text = name,
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
-            onClick = onClick,
-        ) {
-            Text(
-                text = name,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                style = typography.headlineMedium,
-            )
-        }
+            textAlign = TextAlign.Center,
+            style = typography.headlineMedium,
+        )
     }
 }
 
 @Preview
 @Composable
 private fun PreviewCategory() {
-    Box(modifier = Modifier.width(200.dp)) {
-        Category(name = "Demo")
+    CodingQuizTheme {
+        Box(modifier = Modifier.width(200.dp)) {
+            Category(name = "Demo")
+        }
     }
 }
 
 @Preview
 @Composable
 private fun PreviewCategoryGrid() {
-    CategoryGrid(listOf(
-        Category(0, "Category 1"),
-        Category(0, "Category 2"),
-        Category(0, "Category 3"),
-        Category(0, "Category 4"),
-    )) {}
+    CodingQuizTheme {
+        CategoryGrid(
+            listOf(
+                Category(0, "Category 1"),
+                Category(0, "Category 2"),
+                Category(0, "Category 3"),
+                Category(0, "Category 4"),
+            )
+        ) {}
+    }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.codingquiz.data.domain.GivenAnswer
 import com.example.codingquiz.data.domain.QuizResult
 import com.example.codingquiz.repository.GivenAnswerRepository
+import com.example.codingquiz.util.Timer
 import kotlinx.coroutines.launch
 
 class GivenAnswerViewModel(
@@ -14,6 +15,7 @@ class GivenAnswerViewModel(
     val quizResults get() = _quizResults.toList()
 
     fun addAnswer(answer: GivenAnswer, callback: () -> Unit) {
+        Timer.stop()
         viewModelScope.launch {
             givenAnswerRepository.insert(answer)
             _quizResults.add(QuizResult(answer.question.text, answer.correct))
