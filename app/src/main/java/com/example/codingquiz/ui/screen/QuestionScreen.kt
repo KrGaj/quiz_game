@@ -144,7 +144,7 @@ private fun AnswersGrid(
                 val shouldChangeColor = (isAnyAnswerChosen() || isTimeOut())
 
                 val color = if (shouldChangeColor && it.isCorrect) Color.Green
-                    else if (shouldChangeColor && !it.isCorrect) Color.Red
+                    else if (shouldChangeColor) Color.Red
                     else Color.Gray
 
                 PossibleAnswer(
