@@ -1,4 +1,4 @@
-package com.example.codingquiz
+package com.example.codingquiz.navigation
 
 object NavigationConstants {
     const val CATEGORIES_SCREEN = "CategoriesScreen"

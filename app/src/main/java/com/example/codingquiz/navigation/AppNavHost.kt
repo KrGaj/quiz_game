@@ -7,13 +7,12 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.codingquiz.NavigationConstants
 import com.example.codingquiz.QuizResultNavType
 import com.example.codingquiz.data.domain.QuizResult
 import com.example.codingquiz.data.domain.QuizResults
@@ -27,9 +26,9 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable
-fun AppNavHost(
-    navController: NavHostController,
-) {
+fun AppNavHost() {
+    val navController = rememberNavController()
+
     NavHost(
         navController = navController,
         startDestination = NavigationConstants.CATEGORIES_SCREEN,
@@ -209,7 +208,9 @@ private fun encodeQuizResults(
     results: List<QuizResult>,
 ): String = Uri.encode(Json.encodeToString(QuizResults(results)))
 
-private fun deserializeQuizResults(backStackEntry: NavBackStackEntry): List<QuizResult> =
+private fun deserializeQuizResults(
+    backStackEntry: NavBackStackEntry,
+): List<QuizResult> =
     backStackEntry.arguments?.let {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             it.getParcelable(NavigationConstants.QUIZ_RESULTS_ARG, QuizResults::class.java)
