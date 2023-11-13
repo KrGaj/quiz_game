@@ -39,11 +39,14 @@ fun QuizResultsScreen(
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            Score(
-                correctAnswers = quizResultsViewModel.correctAnswersCount,
-                allAnswers = quizResultsViewModel.answersCount,
-            )
-            QuizResultsList(results = quizResultsViewModel.quizResults)
+            with(quizResultsViewModel) {
+                Score(
+                    correctAnswers = correctAnswersCount,
+                    allAnswers = answersCount,
+                )
+                QuizResultsList(results = this.quizResults)
+            }
+
             FinishButton(navigateToCategories)
         }
     }
