@@ -17,23 +17,18 @@ class QuestionRepository(
         )
 
         val questions = questionsEntities.map {
-            val possibleAnswers = listOf(
-                it.answerFirst,
-                it.answerSecond,
-                it.answerThird,
-                it.answerFourth,
-            ).mapIndexed { index, answer ->
+            val possibleAnswers = it.possibleAnswers.map { answer ->
                 PossibleAnswer(
-                    answer,
-                    index + 1 == it.correctAnswer
+                    answer.answerText,
+                    answer.correct,
                 )
             }
 
             Question(
-                it.id,
+                it.question.id,
                 categoryId,
-                it.text,
-                possibleAnswers,
+                it.question.text,
+                possibleAnswers.shuffled(),
             )
         }
 

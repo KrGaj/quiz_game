@@ -6,7 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "answers",
+    tableName = "possible_answers",
     foreignKeys = [
         ForeignKey(
             entity = QuestionEntity::class,
@@ -15,8 +15,9 @@ import androidx.room.PrimaryKey
         ),
     ],
 )
-data class AnswerEntity(
+data class PossibleAnswerEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "question", index = true) val question: Int,
+    @ColumnInfo(name = "answer_text") val answerText: String,
     @ColumnInfo(name = "correct") val correct: Boolean,
 )

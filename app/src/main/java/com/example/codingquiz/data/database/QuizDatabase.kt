@@ -7,12 +7,14 @@ import com.example.codingquiz.data.database.dao.CategoryDao
 import com.example.codingquiz.data.database.dao.QuestionDao
 import com.example.codingquiz.data.database.entity.AnswerEntity
 import com.example.codingquiz.data.database.entity.CategoryEntity
+import com.example.codingquiz.data.database.entity.PossibleAnswerEntity
 import com.example.codingquiz.data.database.entity.QuestionEntity
 
 @Database(
     entities = [
         CategoryEntity::class,
         QuestionEntity::class,
+        PossibleAnswerEntity::class,
         AnswerEntity::class,
        ],
     version = 1,
