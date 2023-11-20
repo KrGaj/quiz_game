@@ -13,10 +13,10 @@ class StatsRepository(
         val categories = categoryEntities.map {
             CategoryStats(
                 Category(
-                    it.first.id,
-                    it.first.name,
+                    it.key.id,
+                    it.key.name,
                 ),
-                it.second,
+                it.value,
             )
         }
 
