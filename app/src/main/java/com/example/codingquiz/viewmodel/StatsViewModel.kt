@@ -14,6 +14,10 @@ class StatsViewModel(
     private val _categoryStats = MutableStateFlow<List<CategoryStats>>(emptyList())
     val categoryStats get() = _categoryStats.asStateFlow()
 
+    init {
+        getMostAnsweredCategories()
+    }
+
     fun getMostAnsweredCategories() {
         viewModelScope.launch {
             _categoryStats.value = statsRepository.getMostAnsweredCategories(CATEGORIES_COUNT)

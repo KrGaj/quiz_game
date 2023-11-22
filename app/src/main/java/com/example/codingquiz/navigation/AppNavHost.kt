@@ -7,11 +7,11 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.codingquiz.QuizResultNavType
 import com.example.codingquiz.data.domain.QuizResult
@@ -21,14 +21,15 @@ import com.example.codingquiz.ui.dialogs.ExitQuizDialog
 import com.example.codingquiz.ui.screen.CategoriesScreen
 import com.example.codingquiz.ui.screen.QuestionScreen
 import com.example.codingquiz.ui.screen.QuizResultsScreen
+import com.example.codingquiz.ui.screen.StatsScreen
 import com.example.codingquiz.util.findActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable
-fun AppNavHost() {
-    val navController = rememberNavController()
-
+fun AppNavHost(
+    navController: NavHostController,
+) {
     NavHost(
         navController = navController,
         startDestination = NavigationConstants.CATEGORIES_SCREEN,
@@ -46,6 +47,10 @@ fun AppNavHost() {
         configureQuizResultsScreen(
             navGraphBuilder = this,
             navController,
+        )
+
+        configureStatsScreen(
+            navGraphBuilder = this,
         )
 
         configureExitQuizDialog(
@@ -124,6 +129,16 @@ private fun configureQuizResultsScreen(
             onBackPressed = { backToCategoriesInclusive(navController) },
             navigateToCategories = { backToCategoriesInclusive(navController) },
         )
+    }
+}
+
+private fun configureStatsScreen(
+    navGraphBuilder: NavGraphBuilder,
+) {
+    navGraphBuilder.composable(
+        route = NavigationConstants.STATS_SCREEN,
+    ) {
+        StatsScreen()
     }
 }
 

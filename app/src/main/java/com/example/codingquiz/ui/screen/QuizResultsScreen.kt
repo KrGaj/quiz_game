@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.codingquiz.R
 import com.example.codingquiz.data.domain.QuizResult
+import com.example.codingquiz.ui.common.TwoTextsRow
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 import com.example.codingquiz.viewmodel.QuizResultsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -94,30 +95,15 @@ private fun QuizResultsList(results: List<QuizResult>) {
 @Composable
 private fun QuizResult(quizResult: QuizResult) {
     CodingQuizTheme {
-        Card(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(
-                    modifier = Modifier.weight(0.7f),
-                    text = quizResult.questionText,
-                )
+        val isAnswerCorrectInfo = stringResource(
+            id = if (quizResult.isAnswerCorrect) R.string.quiz_results_correct
+            else R.string.quiz_results_wrong
+        )
 
-                val answerResult = stringResource(
-                    id = if (quizResult.isAnswerCorrect) R.string.quiz_results_correct
-                    else R.string.quiz_results_wrong
-                )
-
-                Text(text = answerResult)
-            }
-        }
+        TwoTextsRow(
+            leftText = quizResult.questionText,
+            rightText = isAnswerCorrectInfo,
+        )
     }
 }
 

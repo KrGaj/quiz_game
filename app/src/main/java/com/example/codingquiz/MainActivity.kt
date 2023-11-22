@@ -4,13 +4,27 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.codingquiz.di.databaseModule
 import com.example.codingquiz.di.repositoryModule
 import com.example.codingquiz.di.viewModelModule
 import com.example.codingquiz.navigation.AppNavHost
+import com.example.codingquiz.navigation.NavigationConstants
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -34,12 +48,42 @@ class MainActivity : ComponentActivity() {
                 )
             }) {
                 CodingQuizTheme {
+                    val navController = rememberNavController()
+
                     // A surface container using the 'background' color from the theme
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
+                    Scaffold(
+                        bottomBar = {
+                            val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+                            BottomNavigation {
+                                BottomNavigationItem(
+                                    selected = navBackStackEntry?.destination?.route == NavigationConstants.CATEGORIES_SCREEN,
+                                    onClick = { navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            inclusive = true
+                                        }
+                                    } },
+                                    icon = { Icon(Icons.Filled.Home, contentDescription = null) },
+                                    label = { Text(text = "Categories") },
+                                )
+
+                                BottomNavigationItem(
+                                    selected = navBackStackEntry?.destination?.route == NavigationConstants.STATS_SCREEN,
+                                    onClick = { navController.navigate(NavigationConstants.STATS_SCREEN) },
+                                    icon = { Icon(Icons.Filled.Info, contentDescription = null) },
+                                    label = { Text(text = "Stats") },
+                                )
+                            }
+                        },
                     ) {
-                        AppNavHost()
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(it),
+                            color = MaterialTheme.colorScheme.background
+                        ) {
+                            AppNavHost(navController)
+                        }
                     }
                 }
             }
