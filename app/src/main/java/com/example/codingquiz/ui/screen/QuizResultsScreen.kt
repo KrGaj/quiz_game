@@ -58,65 +58,57 @@ private fun Score(
     correctAnswers: Int,
     allAnswers: Int,
 ) {
-    CodingQuizTheme {
-        Card(
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        val scoreText = stringResource(
+            R.string.quiz_results_score,
+            correctAnswers,
+            allAnswers,
+        )
+
+        Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            val scoreText = stringResource(
-                R.string.quiz_results_score,
-                correctAnswers,
-                allAnswers,
-            )
-            
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                text = scoreText,
-                textAlign = TextAlign.Center,
-            )
-        }
+                .padding(8.dp),
+            text = scoreText,
+            textAlign = TextAlign.Center,
+        )
     }
 }
 
 @Composable
 private fun QuizResultsList(results: List<QuizResult>) {
-    CodingQuizTheme {
-        LazyColumn {
-            items(results) {
-                QuizResult(it)
-            }
+    LazyColumn {
+        items(results) {
+            QuizResult(it)
         }
     }
 }
 
 @Composable
 private fun QuizResult(quizResult: QuizResult) {
-    CodingQuizTheme {
-        val isAnswerCorrectInfo = stringResource(
-            id = if (quizResult.isAnswerCorrect) R.string.quiz_results_correct
-            else R.string.quiz_results_wrong
-        )
+    val isAnswerCorrectInfo = stringResource(
+        id = if (quizResult.isAnswerCorrect) R.string.quiz_results_correct
+        else R.string.quiz_results_wrong
+    )
 
-        TwoTextsRow(
-            leftText = quizResult.questionText,
-            rightText = isAnswerCorrectInfo,
-        )
-    }
+    TwoTextsRow(
+        leftText = quizResult.questionText,
+        rightText = isAnswerCorrectInfo,
+    )
 }
 
 @Composable
 private fun FinishButton(navigateToCategories: () -> Unit) {
-    CodingQuizTheme {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            FilledTonalButton(onClick = navigateToCategories) {
-                Text(text = stringResource(id = R.string.quiz_results_finish))
-            }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        FilledTonalButton(onClick = navigateToCategories) {
+            Text(text = stringResource(id = R.string.quiz_results_finish))
         }
     }
 }
@@ -125,21 +117,28 @@ private fun FinishButton(navigateToCategories: () -> Unit) {
 @Preview
 @Composable
 private fun PreviewScore() {
-    Score(correctAnswers = 21, allAnswers = 37)
+    CodingQuizTheme {
+        Score(correctAnswers = 21, allAnswers = 37)
+    }
 }
 
 @Preview
 @Composable
 private fun PreviewQuizResult() {
-    QuizResult(quizResult = QuizResult(
-        "Demo Question 1",
-        false,
+    CodingQuizTheme {
+        QuizResult(
+            quizResult = QuizResult(
+                "Demo Question 1",
+                false,
+            )
         )
-    )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun PreviewFinishButton() {
-    FinishButton {}
+    CodingQuizTheme {
+        FinishButton {}
+    }
 }

@@ -11,6 +11,8 @@
     <string name="quiz_results_wrong">Wrong</string>
     <string name="quiz_results_finish">Finish</string>
 
+    <string name="categories_header">Categories</string>
+
     <string name="stats_header">Statistics</string>
     <string name="stats_most_answered_header">Most answered categories</string>
 

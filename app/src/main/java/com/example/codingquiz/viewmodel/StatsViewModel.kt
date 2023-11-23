@@ -14,15 +14,31 @@ class StatsViewModel(
     private val _categoryStats = MutableStateFlow<List<CategoryStats>>(emptyList())
     val categoryStats get() = _categoryStats.asStateFlow()
 
-    init {
-        getMostAnsweredCategories()
-    }
+    private val _answeredQuestionsCount = MutableStateFlow(0)
+    val answeredQuestionsCount get() = _answeredQuestionsCount.asStateFlow()
+
+    private val _answersCount = MutableStateFlow(0)
+    val answersCount get() = _answersCount.asStateFlow()
 
     fun getMostAnsweredCategories() {
         viewModelScope.launch {
             _categoryStats.value = statsRepository.getMostAnsweredCategories(CATEGORIES_COUNT)
         }
     }
+
+    fun getAnsweredQuestionsCount() {
+        viewModelScope.launch {
+            _answeredQuestionsCount.value = statsRepository.getAnsweredQuestionsCount()
+        }
+    }
+
+    fun getAllAnswersCount() {
+        viewModelScope.launch {
+            _answersCount.value = statsRepository.getAllAnswersCount()
+        }
+    }
+
+    private
 
     companion object {
         private const val CATEGORIES_COUNT = 3

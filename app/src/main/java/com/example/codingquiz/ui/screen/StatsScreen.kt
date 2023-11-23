@@ -1,12 +1,12 @@
 package com.example.codingquiz.ui.screen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -14,6 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.codingquiz.R
 import com.example.codingquiz.data.domain.CategoryStats
+import com.example.codingquiz.ui.common.HeaderTextLarge
+import com.example.codingquiz.ui.common.HeaderTextMedium
 import com.example.codingquiz.ui.common.TwoTextsRow
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 import com.example.codingquiz.viewmodel.StatsViewModel
@@ -23,11 +25,20 @@ import org.koin.androidx.compose.koinViewModel
 fun StatsScreen(
     statsViewModel: StatsViewModel = koinViewModel()
 ) {
-    Column {
+    LaunchedEffect(Unit) {
+        statsViewModel.getMostAnsweredCategories()
+        statsViewModel.getAnsweredQuestionsCount()
+        statsViewModel.getAllAnswersCount()
+    }
+
+    Column(
+        modifier = Modifier.padding(12.dp)
+    ) {
         val categoryStats = statsViewModel.categoryStats.collectAsState()
 
         CodingQuizTheme {
             StatsLabel()
+            Spacer(modifier = Modifier.padding(vertical = 8.dp))
             CategoryStatsLabel()
             CategoryStatsList(statsList = categoryStats.value)
         }
@@ -36,10 +47,8 @@ fun StatsScreen(
 
 @Composable
 private fun StatsLabel() {
-    Text(
+    HeaderTextLarge(
         text = stringResource(id = R.string.stats_header),
-        style = MaterialTheme.typography.headlineLarge,
-        modifier = Modifier.padding(horizontal = 8.dp),
     )
 }
 
@@ -53,10 +62,8 @@ private fun CategoryStats(statsList: List<CategoryStats>) {
 
 @Composable
 private fun CategoryStatsLabel() {
-    Text(
+    HeaderTextMedium(
         text = stringResource(id = R.string.stats_most_answered_header),
-        style = MaterialTheme.typography.headlineMedium,
-        modifier = Modifier.padding(8.dp),
     )
 }
 
@@ -76,6 +83,11 @@ private fun CategoryStatsRow(stats: CategoryStats) {
         leftText = stats.category.name,
         rightText = stats.answersGiven.toString(),
     )
+}
+
+@Composable
+private fun AnsweredQuestions() {
+
 }
 
 @Preview(showBackground = true)

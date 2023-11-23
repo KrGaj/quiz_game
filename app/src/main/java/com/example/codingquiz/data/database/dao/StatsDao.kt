@@ -17,4 +17,11 @@ interface StatsDao {
     suspend fun getMostAnsweredCategories(
         count: Int,
     ): Map<CategoryEntity, @MapColumn("answers_count") Int>
+
+    @Query("SELECT Count(*) FROM (SELECT * FROM answers INNER JOIN questions " +
+            "ON answers.question=questions.id GROUP BY questions.id)")
+    suspend fun getAnsweredQuestionsCount(): Int
+
+    @Query("SELECT Count(*) FROM answers")
+    suspend fun getAllAnswersCount(): Int
 }

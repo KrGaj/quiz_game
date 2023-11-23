@@ -16,14 +16,10 @@ fun TwoTextsRow(
     rightText: String,
 ) {
     Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(

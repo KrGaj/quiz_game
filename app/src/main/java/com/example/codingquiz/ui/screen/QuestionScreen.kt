@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -33,6 +32,7 @@ import com.example.codingquiz.data.domain.GivenAnswer
 import com.example.codingquiz.data.domain.PossibleAnswer
 import com.example.codingquiz.data.domain.Question
 import com.example.codingquiz.data.domain.QuizResult
+import com.example.codingquiz.ui.common.SpacedLazyVerticalGrid
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 import com.example.codingquiz.viewmodel.GivenAnswerViewModel
 import com.example.codingquiz.viewmodel.QuestionViewModel
@@ -110,24 +110,22 @@ fun QuestionScreen(
 
 @Composable
 private fun QuestionText(question: Question) {
-    CodingQuizTheme {
-        Card(
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .wrapContentHeight(),
+    ) {
+        Text(
+            text = question.text,
             modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-                .wrapContentHeight(),
-        ) {
-            Text(
-                text = question.text,
-                modifier = Modifier
-                    .padding(
-                        horizontal = 24.dp,
-                        vertical = 12.dp
-                    )
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center,
-            )
-        }
+                .padding(
+                    horizontal = 24.dp,
+                    vertical = 12.dp
+                )
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center,
+        )
     }
 }
 
@@ -138,21 +136,21 @@ private fun AnswersGrid(
     isTimeOut: () -> Boolean,
     onClick: (PossibleAnswer) -> Unit,
 ) {
-    CodingQuizTheme {
-        LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-            items(answers) {
-                val shouldChangeColor = (isAnyAnswerChosen() || isTimeOut())
+    SpacedLazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+    ) {
+        items(answers) {
+            val shouldChangeColor = (isAnyAnswerChosen() || isTimeOut())
 
-                val color = if (shouldChangeColor && it.isCorrect) Color.Green
-                    else if (shouldChangeColor) Color.Red
-                    else Color.Gray
+            val color = if (shouldChangeColor && it.isCorrect) Color.Green
+                else if (shouldChangeColor) Color.Red
+                else Color.Gray
 
-                PossibleAnswer(
-                    answer = it,
-                    color,
-                ) {
-                    onClick(it)
-                }
+            PossibleAnswer(
+                answer = it,
+                color,
+            ) {
+                onClick(it)
             }
         }
     }
@@ -164,40 +162,33 @@ private fun PossibleAnswer(
     color: Color,
     onClick: () -> Unit,
 ) {
-    CodingQuizTheme {
-        FilledTonalButton(
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(color),
-            onClick = onClick,
-        ) {
-            Text(
-                text = answer.text,
-            )
-        }
+    FilledTonalButton(
+        shape = RoundedCornerShape(12.dp),
+        colors = ButtonDefaults.buttonColors(color),
+        onClick = onClick,
+    ) {
+        Text(
+            text = answer.text,
+        )
     }
 }
 
 @Composable
 private fun Timer(timeLeft: Long) {
-    CodingQuizTheme {
-        val timeLeftText = pluralStringResource(
-            id = R.plurals.question_time_left,
-            count = timeLeft.toInt(),
-            timeLeft.toInt(),
-        )
+    val timeLeftText = pluralStringResource(
+        id = R.plurals.question_time_left,
+        count = timeLeft.toInt(),
+        timeLeft.toInt(),
+    )
 
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            text = timeLeftText,
-            textAlign = TextAlign.Center,
-            fontSize = 24.sp,
-        )
-    }
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        text = timeLeftText,
+        textAlign = TextAlign.Center,
+        fontSize = 24.sp,
+    )
 }
 
 

@@ -22,4 +22,8 @@ class StatsRepository(
 
         return categories
     }
+
+    suspend fun getAnsweredQuestionsCount() = statsDao.getAnsweredQuestionsCount()
+
+    suspend fun getAllAnswersCount() = statsDao.getAllAnswersCount()
 }
