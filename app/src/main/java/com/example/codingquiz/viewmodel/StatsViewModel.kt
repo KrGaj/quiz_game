@@ -40,9 +40,7 @@ class StatsViewModel(
         }
     }
 
-    private
-
-    companion object {
+    private companion object {
         private const val CATEGORIES_COUNT = 3
     }
 }
