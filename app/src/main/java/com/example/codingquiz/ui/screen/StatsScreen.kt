@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.codingquiz.R
 import com.example.codingquiz.data.domain.AnsweredQuestionsCountStats
 import com.example.codingquiz.data.domain.CategoryStats
+import com.example.codingquiz.data.domain.CorrectAnswersStats
 import com.example.codingquiz.ui.common.HeaderTextLarge
 import com.example.codingquiz.ui.common.HeaderTextMedium
 import com.example.codingquiz.ui.common.TwoTextsRow
@@ -36,14 +37,16 @@ fun StatsScreen(
 
         Column(
             modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             val categoryStats by statsViewModel.categoryStats.collectAsState()
             val answeredQuestionsStats by statsViewModel.answeredQuestionsCount.collectAsState()
+            val correctAnswersStats by statsViewModel.correctAnswersCount.collectAsState()
 
             StatsLabel()
             CategoryStats(statsList = categoryStats)
             AnsweredQuestionsStats(stats = answeredQuestionsStats)
+            CorrectAnswersStats(stats = correctAnswersStats)
         }
     }
 }
@@ -117,6 +120,36 @@ private fun AnsweredQuestionsRow(stats: AnsweredQuestionsCountStats) {
     )
 }
 
+@Composable
+private fun CorrectAnswersStats(stats: CorrectAnswersStats) {
+    Column {
+        CorrectAnswersStatsLabel()
+        CorrectAnswersStatsRow(stats = stats)
+    }
+}
+
+@Composable
+private fun CorrectAnswersStatsLabel() {
+    HeaderTextMedium(text = stringResource(id = R.string.correct_answers_header))
+}
+
+@Composable
+private fun CorrectAnswersStatsRow(stats: CorrectAnswersStats) {
+    val percentage = if (stats.allAnswers != 0)
+            (stats.correctAnswers.toDouble()/stats.allAnswers) * 100
+    else 0.0
+
+    TwoTextsRow(
+        leftText = stringResource(id = R.string.correct_answers_msg),
+        rightText = stringResource(
+            id = R.string.correct_answers_count,
+            stats.correctAnswers,
+            stats.allAnswers,
+            percentage,
+        )
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun PreviewCategoryStats() {
@@ -125,19 +158,19 @@ private fun PreviewCategoryStats() {
     }
 }
 
-@Preview
-@Composable
-private fun PreviewCategoryStatsRow() {
-    CodingQuizTheme {
-        CategoryStatsRow(stats = categoryStats[0])
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun PreviewAnsweredQuestionsStats() {
     CodingQuizTheme {
         AnsweredQuestionsStats(stats = answeredQuestionsStats)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewCorrectAnswersStats() {
+    CodingQuizTheme {
+        CorrectAnswersStats(stats = correctAnswersStats)
     }
 }
 
@@ -157,3 +190,5 @@ private val categoryStats = listOf(
 )
 
 private val answeredQuestionsStats = AnsweredQuestionsCountStats(15, 20)
+
+private val correctAnswersStats = CorrectAnswersStats(20, 25)

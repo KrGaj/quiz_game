@@ -20,7 +20,7 @@ class StatsViewModel(
     val answeredQuestionsCount get() = _answeredQuestionsCount.asStateFlow()
 
     private val _answersCount = MutableStateFlow(CorrectAnswersStats(0, 0))
-    val answersCount get() = _answersCount.asStateFlow()
+    val correctAnswersCount get() = _answersCount.asStateFlow()
 
     fun getMostAnsweredCategories() {
         viewModelScope.launch {
