@@ -8,12 +8,13 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
-import com.example.codingquiz.QuizResultNavType
+import com.example.codingquiz.util.navtype.CategoryNavType
+import com.example.codingquiz.util.navtype.QuizResultNavType
+import com.example.codingquiz.data.domain.Category
 import com.example.codingquiz.data.domain.QuizResult
 import com.example.codingquiz.data.domain.QuizResults
 import com.example.codingquiz.ui.dialogs.ExitAppDialog
@@ -78,7 +79,7 @@ private fun configureCategoriesScreenRoute(
             }
         ) {
             navController.navigate(
-                route = "${NavigationConstants.QUESTION_SCREEN}/${it.id}",
+                route = "${NavigationConstants.QUESTION_SCREEN}/${encodeCategory(it)}",
             ) {
                 popUpTo(
                     NavigationConstants.CATEGORIES_SCREEN,
@@ -95,14 +96,13 @@ private fun configureQuestionScreenRoute(
     navController: NavController,
 ) {
     navGraphBuilder.composable(
-        route = "${NavigationConstants.QUESTION_SCREEN}/{${NavigationConstants.CATEGORY_ID_ARG}}",
-        arguments = listOf(navArgument(NavigationConstants.CATEGORY_ID_ARG) {
-            type = NavType.IntType
+        route = "${NavigationConstants.QUESTION_SCREEN}/{${NavigationConstants.CATEGORY_ARG}}",
+        arguments = listOf(navArgument(NavigationConstants.CATEGORY_ARG) {
+            type = CategoryNavType()
         }),
     ) { backStackEntry ->
         QuestionScreen(
-            categoryId = backStackEntry.arguments
-                ?.getInt(NavigationConstants.CATEGORY_ID_ARG),
+            category = deserializeCategory(backStackEntry),
             onBackPressed = {
                 val resultsJson = encodeQuizResults(it)
                 navController.navigate("${NavigationConstants.EXIT_QUIZ_DIALOG}/$resultsJson")
@@ -218,6 +218,21 @@ private fun backToCategoriesInclusive(navController: NavController) {
         }
     }
 }
+
+private fun encodeCategory(
+    category: Category,
+): String = Uri.encode(Json.encodeToString(category))
+
+private fun deserializeCategory(
+    backStackEntry: NavBackStackEntry,
+): Category? =
+    backStackEntry.arguments?.let {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            it.getParcelable(NavigationConstants.CATEGORY_ARG, Category::class.java)
+        } else {
+            it.getParcelable(NavigationConstants.CATEGORY_ARG)
+        }
+    }
 
 private fun encodeQuizResults(
     results: List<QuizResult>,

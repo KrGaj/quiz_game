@@ -23,15 +23,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.codingquiz.R
+import com.example.codingquiz.data.domain.Category
 import com.example.codingquiz.data.domain.GivenAnswer
 import com.example.codingquiz.data.domain.PossibleAnswer
 import com.example.codingquiz.data.domain.Question
 import com.example.codingquiz.data.domain.QuizResult
+import com.example.codingquiz.ui.common.HeaderTextLarge
 import com.example.codingquiz.ui.common.SpacedLazyVerticalGrid
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 import com.example.codingquiz.viewmodel.GivenAnswerViewModel
@@ -47,11 +50,12 @@ class AnswerState {
 fun QuestionScreen(
     questionViewModel: QuestionViewModel = koinViewModel(),
     givenAnswerViewModel: GivenAnswerViewModel = koinViewModel(),
-    categoryId: Int?,
+    category: Category?,
     onBackPressed: (List<QuizResult>) -> Unit,
     navigateToResults: (List<QuizResult>) -> Unit,
 ) {
     val question by questionViewModel.question.collectAsState()
+    val questionNumber by questionViewModel.questionNumber.collectAsState()
     val answerState = remember {
         AnswerState()
     }
@@ -71,10 +75,15 @@ fun QuestionScreen(
     }
 
     CodingQuizTheme {
-        LaunchedEffect(Unit) { questionViewModel.fetchQuestions(categoryId) }
+        LaunchedEffect(Unit) { questionViewModel.fetchQuestions(category?.id) }
         Column(
+            modifier = Modifier.padding(8.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
+            QuestionHeader(
+                categoryName = category?.name ?: "",
+                questionNumber = questionNumber,
+            )
             QuestionText(question)
             AnswersGrid(
                 answers = question.answers,
@@ -106,6 +115,16 @@ fun QuestionScreen(
             callback = answerAddCallback,
         )
     }
+}
+
+@Composable
+private fun QuestionHeader(
+    categoryName: String,
+    questionNumber: Int,
+) {
+    HeaderTextLarge(
+        text = stringResource(id = R.string.question_header, categoryName, questionNumber),
+    )
 }
 
 @Composable

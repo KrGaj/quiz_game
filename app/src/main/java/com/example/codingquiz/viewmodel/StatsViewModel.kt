@@ -2,7 +2,9 @@ package com.example.codingquiz.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.codingquiz.data.domain.AnsweredQuestionsCountStats
 import com.example.codingquiz.data.domain.CategoryStats
+import com.example.codingquiz.data.domain.CorrectAnswersStats
 import com.example.codingquiz.repository.StatsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,10 +16,10 @@ class StatsViewModel(
     private val _categoryStats = MutableStateFlow<List<CategoryStats>>(emptyList())
     val categoryStats get() = _categoryStats.asStateFlow()
 
-    private val _answeredQuestionsCount = MutableStateFlow(0)
+    private val _answeredQuestionsCount = MutableStateFlow(AnsweredQuestionsCountStats(0, 0))
     val answeredQuestionsCount get() = _answeredQuestionsCount.asStateFlow()
 
-    private val _answersCount = MutableStateFlow(0)
+    private val _answersCount = MutableStateFlow(CorrectAnswersStats(0, 0))
     val answersCount get() = _answersCount.asStateFlow()
 
     fun getMostAnsweredCategories() {
@@ -32,9 +34,9 @@ class StatsViewModel(
         }
     }
 
-    fun getAllAnswersCount() {
+    fun getCorrectAnswersCount() {
         viewModelScope.launch {
-            _answersCount.value = statsRepository.getAllAnswersCount()
+            _answersCount.value = statsRepository.getCorrectAnswersCount()
         }
     }
 

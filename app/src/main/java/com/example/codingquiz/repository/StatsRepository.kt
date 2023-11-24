@@ -1,8 +1,10 @@
 package com.example.codingquiz.repository
 
 import com.example.codingquiz.data.database.dao.StatsDao
+import com.example.codingquiz.data.domain.AnsweredQuestionsCountStats
 import com.example.codingquiz.data.domain.Category
 import com.example.codingquiz.data.domain.CategoryStats
+import com.example.codingquiz.data.domain.CorrectAnswersStats
 
 class StatsRepository(
     private val statsDao: StatsDao,
@@ -23,7 +25,21 @@ class StatsRepository(
         return categories
     }
 
-    suspend fun getAnsweredQuestionsCount() = statsDao.getAnsweredQuestionsCount()
+    suspend fun getAnsweredQuestionsCount(): AnsweredQuestionsCountStats {
+        val rawStats = statsDao.getAnsweredQuestionsCount().entries.first()
 
-    suspend fun getAllAnswersCount() = statsDao.getAllAnswersCount()
+        return AnsweredQuestionsCountStats(
+            questionsAnswered = rawStats.key,
+            allQuestions = rawStats.value,
+        )
+    }
+
+    suspend fun getCorrectAnswersCount(): CorrectAnswersStats {
+        val rawStats = statsDao.getCorrectAnswersCount().entries.first()
+
+        return CorrectAnswersStats(
+            correctAnswers = rawStats.key,
+            allAnswers = rawStats.value,
+        )
+    }
 }

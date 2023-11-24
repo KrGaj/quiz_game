@@ -6,15 +6,19 @@
         <item quantity="other">%1$d seconds left</item>
     </plurals>
 
+    <string name="categories_header">Categories</string>
+    <string name="question_header">%1$s: Question %2$d</string>
+
     <string name="quiz_results_score">Your score: %1$d/%2$d</string>
     <string name="quiz_results_correct">Correct</string>
     <string name="quiz_results_wrong">Wrong</string>
     <string name="quiz_results_finish">Finish</string>
 
-    <string name="categories_header">Categories</string>
-
     <string name="stats_header">Statistics</string>
-    <string name="stats_most_answered_header">Most answered categories</string>
+    <string name="stats_most_answered_header">Most Answered Categories</string>
+    <string name="answered_questions_header">Questions Answered</string>
+    <string name="answered_questions_msg">Questions with at least one answer given</string>
+    <string name="answered_questions_count">%1$d/%2$d</string>
 
     <string name="quiz_exit_message">Are you sure want to quit this quiz?</string>
     <string name="app_exit_message">Are you sure want to exit this app?</string>

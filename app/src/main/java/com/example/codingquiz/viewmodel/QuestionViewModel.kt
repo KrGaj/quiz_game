@@ -14,9 +14,12 @@ class QuestionViewModel(
     private val questionRepository: QuestionRepository,
 ) : ViewModel() {
     private var questions = emptyList<Question>()
-    private var questionIterator = questions.iterator()
+    private var questionIterator = questions.iterator().withIndex()
     private val _question = MutableStateFlow(Question(0, 0, "Questions not loaded yet", emptyList()))
     val question get() = _question.asStateFlow()
+
+    private val _questionNumber = MutableStateFlow(0)
+    val questionNumber = _questionNumber.asStateFlow()
 
     val timeLeft get() = Timer.timeLeft
 
@@ -29,7 +32,7 @@ class QuestionViewModel(
                 )
             }
 
-            questionIterator = questions.iterator()
+            questionIterator = questions.iterator().withIndex()
             nextQuestion()
         }
     }
@@ -38,7 +41,9 @@ class QuestionViewModel(
 
     fun nextQuestion() {
         if (!isQuestionLast()) {
-            _question.value = questionIterator.next()
+            val questionWithIndex = questionIterator.next()
+            _question.value = questionWithIndex.value
+            _questionNumber.value = questionWithIndex.index + 1
             Timer.start(TIMEOUT)
         }
     }

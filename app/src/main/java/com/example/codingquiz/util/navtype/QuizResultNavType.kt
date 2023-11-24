@@ -1,4 +1,4 @@
-package com.example.codingquiz
+package com.example.codingquiz.util.navtype
 
 import android.os.Bundle
 import androidx.navigation.NavType

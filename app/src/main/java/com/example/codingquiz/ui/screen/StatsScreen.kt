@@ -1,7 +1,7 @@
 package com.example.codingquiz.ui.screen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.codingquiz.R
+import com.example.codingquiz.data.domain.AnsweredQuestionsCountStats
 import com.example.codingquiz.data.domain.CategoryStats
 import com.example.codingquiz.ui.common.HeaderTextLarge
 import com.example.codingquiz.ui.common.HeaderTextMedium
@@ -25,22 +26,23 @@ import org.koin.androidx.compose.koinViewModel
 fun StatsScreen(
     statsViewModel: StatsViewModel = koinViewModel()
 ) {
-    LaunchedEffect(Unit) {
-        statsViewModel.getMostAnsweredCategories()
-        statsViewModel.getAnsweredQuestionsCount()
-        statsViewModel.getAllAnswersCount()
-    }
+    Column {
+        LaunchedEffect(Unit) {
+            statsViewModel.getMostAnsweredCategories()
+            statsViewModel.getAnsweredQuestionsCount()
+            statsViewModel.getCorrectAnswersCount()
+        }
 
-    Column(
-        modifier = Modifier.padding(12.dp)
-    ) {
-        val categoryStats = statsViewModel.categoryStats.collectAsState()
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            val categoryStats = statsViewModel.categoryStats.collectAsState()
+            val answeredQuestionsStats = statsViewModel.answeredQuestionsCount.collectAsState()
 
-        CodingQuizTheme {
             StatsLabel()
-            Spacer(modifier = Modifier.padding(vertical = 8.dp))
-            CategoryStatsLabel()
-            CategoryStatsList(statsList = categoryStats.value)
+            CategoryStats(statsList = categoryStats.value)
+            AnsweredQuestionsStats(stats = answeredQuestionsStats.value)
         }
     }
 }
@@ -86,8 +88,32 @@ private fun CategoryStatsRow(stats: CategoryStats) {
 }
 
 @Composable
-private fun AnsweredQuestions() {
+private fun AnsweredQuestionsStats(stats: AnsweredQuestionsCountStats) {
+    Column {
+        AnsweredQuestionsLabel()
+        AnsweredQuestionsRow(stats = stats)
+    }
+}
 
+@Composable
+private fun AnsweredQuestionsLabel() {
+    HeaderTextMedium(
+        text = stringResource(id = R.string.answered_questions_header),
+    )
+}
+
+@Composable
+private fun AnsweredQuestionsRow(stats: AnsweredQuestionsCountStats) {
+    TwoTextsRow(
+        leftText = stringResource(
+            id = R.string.answered_questions_msg,
+        ),
+        rightText = stringResource(
+            id = R.string.answered_questions_count,
+            stats.questionsAnswered,
+            stats.allQuestions,
+        ),
+    )
 }
 
 @Preview(showBackground = true)
@@ -106,6 +132,14 @@ private fun PreviewCategoryStatsRow() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+private fun PreviewAnsweredQuestionsStats() {
+    CodingQuizTheme {
+        AnsweredQuestionsStats(stats = answeredQuestionsStats)
+    }
+}
+
 private val categoryStats = listOf(
     CategoryStats(
         com.example.codingquiz.data.domain.Category(0, "Demo1"),
@@ -120,3 +154,5 @@ private val categoryStats = listOf(
         37,
     ),
 )
+
+private val answeredQuestionsStats = AnsweredQuestionsCountStats(15, 20)
