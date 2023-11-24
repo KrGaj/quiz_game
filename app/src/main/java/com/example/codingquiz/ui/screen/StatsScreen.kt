@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,12 +38,12 @@ fun StatsScreen(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            val categoryStats = statsViewModel.categoryStats.collectAsState()
-            val answeredQuestionsStats = statsViewModel.answeredQuestionsCount.collectAsState()
+            val categoryStats by statsViewModel.categoryStats.collectAsState()
+            val answeredQuestionsStats by statsViewModel.answeredQuestionsCount.collectAsState()
 
             StatsLabel()
-            CategoryStats(statsList = categoryStats.value)
-            AnsweredQuestionsStats(stats = answeredQuestionsStats.value)
+            CategoryStats(statsList = categoryStats)
+            AnsweredQuestionsStats(stats = answeredQuestionsStats)
         }
     }
 }

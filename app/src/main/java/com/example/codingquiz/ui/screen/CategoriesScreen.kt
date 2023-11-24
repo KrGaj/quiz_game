@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -34,7 +35,7 @@ fun CategoriesScreen(
     onBackPressed: () -> Unit,
     navigateOnItemClicked: (Category) -> Unit,
 ) {
-    val categories = categoryViewModel.categories.collectAsState()
+    val categories by categoryViewModel.categories.collectAsState()
 
     BackHandler {
         onBackPressed()
@@ -46,7 +47,7 @@ fun CategoriesScreen(
         ) {
             CategoriesLabel()
             Spacer(modifier = Modifier.padding(vertical = 8.dp))
-            CategoryGrid(categories = categories.value, navigateOnItemClicked)
+            CategoryGrid(categories = categories, navigateOnItemClicked)
         }
     }
 }
