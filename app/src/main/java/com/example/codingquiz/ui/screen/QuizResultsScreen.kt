@@ -38,6 +38,7 @@ fun QuizResultsScreen(
 
     CodingQuizTheme {
         Column(
+            modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             with(quizResultsViewModel) {

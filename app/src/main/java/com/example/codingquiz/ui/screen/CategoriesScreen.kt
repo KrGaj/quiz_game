@@ -1,9 +1,9 @@
 package com.example.codingquiz.ui.screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -43,10 +43,10 @@ fun CategoriesScreen(
 
     CodingQuizTheme {
         Column(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             CategoriesLabel()
-            Spacer(modifier = Modifier.padding(vertical = 8.dp))
             CategoryGrid(categories = categories, navigateOnItemClicked)
         }
     }

@@ -37,7 +37,7 @@ fun StatsScreen(
 
         Column(
             modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             val categoryStats by statsViewModel.categoryStats.collectAsState()
             val answeredQuestionsStats by statsViewModel.answeredQuestionsCount.collectAsState()

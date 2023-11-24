@@ -77,7 +77,7 @@ fun QuestionScreen(
     CodingQuizTheme {
         LaunchedEffect(Unit) { questionViewModel.fetchQuestions(category?.id) }
         Column(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             QuestionHeader(
