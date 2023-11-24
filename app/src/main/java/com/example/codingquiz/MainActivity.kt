@@ -15,9 +15,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.codingquiz.di.databaseModule
@@ -49,30 +52,18 @@ class MainActivity : ComponentActivity() {
             }) {
                 CodingQuizTheme {
                     val navController = rememberNavController()
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
 
                     // A surface container using the 'background' color from the theme
                     Scaffold(
                         bottomBar = {
-                            val navBackStackEntry by navController.currentBackStackEntryAsState()
-
-                            BottomNavigation {
-                                BottomNavigationItem(
-                                    selected = navBackStackEntry?.destination?.route == NavigationConstants.CATEGORIES_SCREEN,
-                                    onClick = { navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
-                                        popUpTo(navController.graph.findStartDestination().id) {
-                                            inclusive = true
-                                        }
-                                    } },
-                                    icon = { Icon(Icons.Filled.Home, contentDescription = null) },
-                                    label = { Text(text = "Categories") },
+                            when (navBackStackEntry?.destination?.route) {
+                                NavigationConstants.CATEGORIES_SCREEN,
+                                NavigationConstants.STATS_SCREEN -> BottomNavBar(
+                                    navController = navController,
+                                    navBackStackEntry = navBackStackEntry,
                                 )
-
-                                BottomNavigationItem(
-                                    selected = navBackStackEntry?.destination?.route == NavigationConstants.STATS_SCREEN,
-                                    onClick = { navController.navigate(NavigationConstants.STATS_SCREEN) },
-                                    icon = { Icon(Icons.Filled.Info, contentDescription = null) },
-                                    label = { Text(text = "Stats") },
-                                )
+                                else -> Unit
                             }
                         },
                     ) {
@@ -87,6 +78,44 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun BottomNavBar(
+        navController: NavHostController,
+        navBackStackEntry: NavBackStackEntry?,
+    ) {
+        BottomNavigation {
+            BottomNavigationItem(
+                selected = navBackStackEntry?.destination?.route == NavigationConstants.CATEGORIES_SCREEN,
+                onClick = {
+                    navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            inclusive = true
+                        }
+                    }
+                },
+                icon = {
+                    Icon(
+                        Icons.Filled.Home,
+                        contentDescription = null
+                    )
+                },
+                label = { Text(text = "Categories") },
+            )
+
+            BottomNavigationItem(
+                selected = navBackStackEntry?.destination?.route == NavigationConstants.STATS_SCREEN,
+                onClick = { navController.navigate(NavigationConstants.STATS_SCREEN) },
+                icon = {
+                    Icon(
+                        Icons.Filled.Info,
+                        contentDescription = null
+                    )
+                },
+                label = { Text(text = "Stats") },
+            )
         }
     }
 }
