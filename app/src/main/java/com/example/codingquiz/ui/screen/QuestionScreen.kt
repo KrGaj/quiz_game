@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,7 +40,10 @@ import com.example.codingquiz.ui.common.SpacedLazyVerticalGrid
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 import com.example.codingquiz.viewmodel.GivenAnswerViewModel
 import com.example.codingquiz.viewmodel.QuestionViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import kotlin.time.Duration.Companion.seconds
 
 class AnswerState {
     var isAnyAnswerChosen: Boolean by mutableStateOf(false)
@@ -54,6 +58,7 @@ fun QuestionScreen(
     onBackPressed: (List<QuizResult>) -> Unit,
     navigateToResults: (List<QuizResult>) -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
     val question by questionViewModel.question.collectAsStateWithLifecycle()
     val questionNumber by questionViewModel.questionNumber.collectAsStateWithLifecycle()
     val answerState = remember {
@@ -91,14 +96,17 @@ fun QuestionScreen(
                 { answerState.isTimeOut },
             ) {
                 if (!answerState.isAnyAnswerChosen) {
-                    answerState.isAnyAnswerChosen = true
-                    givenAnswerViewModel.addAnswer(
-                        answer = GivenAnswer(
-                            question = question,
-                            correct = it.isCorrect,
-                        ),
-                        callback = answerAddCallback,
-                    )
+                    scope.launch {
+                        answerState.isAnyAnswerChosen = true
+                        givenAnswerViewModel.addAnswer(
+                            answer = GivenAnswer(
+                                question = question,
+                                correct = it.isCorrect,
+                            ),
+                        )
+                        delay(1.seconds)
+                        answerAddCallback()
+                    }
                 }
             }
             Timer(timeLeft = timeLeft)
@@ -107,13 +115,17 @@ fun QuestionScreen(
 
     if (timeLeft == 0L) {
         answerState.isTimeOut = true
-        givenAnswerViewModel.addAnswer(
-            answer = GivenAnswer(
-                question = question,
-                correct = false,
-            ),
-            callback = answerAddCallback,
-        )
+
+        LaunchedEffect(Unit) {
+            givenAnswerViewModel.addAnswer(
+                answer = GivenAnswer(
+                    question = question,
+                    correct = false,
+                ),
+            )
+            delay(1.seconds)
+            answerAddCallback()
+        }
     }
 }
 
