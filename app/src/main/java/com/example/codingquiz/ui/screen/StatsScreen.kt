@@ -28,6 +28,13 @@ import org.koin.androidx.compose.koinViewModel
 fun StatsScreen(
     statsViewModel: StatsViewModel = koinViewModel()
 ) {
+    val categoryStats by statsViewModel.categoryStats
+        .collectAsStateWithLifecycle()
+    val answeredQuestionsStats by statsViewModel.answeredQuestionsCount
+        .collectAsStateWithLifecycle()
+    val correctAnswersStats by statsViewModel.correctAnswersCount
+        .collectAsStateWithLifecycle()
+
     Column {
         LaunchedEffect(Unit) {
             statsViewModel.getMostAnsweredCategories()
@@ -39,13 +46,6 @@ fun StatsScreen(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
-            val categoryStats by statsViewModel.categoryStats
-                .collectAsStateWithLifecycle()
-            val answeredQuestionsStats by statsViewModel.answeredQuestionsCount
-                .collectAsStateWithLifecycle()
-            val correctAnswersStats by statsViewModel.correctAnswersCount
-                .collectAsStateWithLifecycle()
-
             StatsLabel()
             CategoryStats(statsList = categoryStats)
             AnsweredQuestionsStats(stats = answeredQuestionsStats)
