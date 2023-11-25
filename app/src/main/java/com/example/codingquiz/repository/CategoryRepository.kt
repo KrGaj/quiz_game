@@ -6,8 +6,8 @@ import com.example.codingquiz.data.domain.Category
 class CategoryRepository(
     private val categoryDao: CategoryDao,
 ) {
-    suspend fun getAll(): List<Category> =
-        categoryDao.getAll().map {
+    suspend fun getAllCategories(): List<Category> =
+        categoryDao.getAllCategories().map {
             Category(
                 it.id,
                 it.name,

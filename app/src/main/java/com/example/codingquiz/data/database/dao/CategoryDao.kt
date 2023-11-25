@@ -7,5 +7,5 @@ import com.example.codingquiz.data.database.entity.CategoryEntity
 @Dao
 interface CategoryDao {
     @Query("SELECT * FROM categories")
-    suspend fun getAll(): List<CategoryEntity>
+    suspend fun getAllCategories(): List<CategoryEntity>
 }

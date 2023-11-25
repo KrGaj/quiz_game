@@ -7,9 +7,9 @@ import com.example.codingquiz.data.domain.GivenAnswer
 class GivenAnswerRepository(
     private val answerDao: AnswerDao,
 ) {
-    suspend fun insert(
+    suspend fun insertAnswer(
         answer: GivenAnswer,
-    ) = answerDao.insert(
+    ) = answerDao.insertAnswer(
         AnswerEntity(
             question = answer.question.id,
             correct = answer.correct,

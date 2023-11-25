@@ -7,11 +7,11 @@ import com.example.codingquiz.data.domain.Question
 class QuestionRepository(
     private val questionDao: QuestionDao,
 ) {
-    suspend fun getRandom(
+    suspend fun getRandomQuestions(
         quantity: Int,
         categoryId: Int,
     ): List<Question> {
-        val questionsEntities = questionDao.getRandom(
+        val questionsEntities = questionDao.getRandomQuestions(
             quantity,
             categoryId,
         )

@@ -7,5 +7,5 @@ import com.example.codingquiz.data.database.entity.AnswerEntity
 @Dao
 interface AnswerDao {
     @Insert
-    suspend fun insert(answer: AnswerEntity): Long
+    suspend fun insertAnswer(answer: AnswerEntity): Long
 }

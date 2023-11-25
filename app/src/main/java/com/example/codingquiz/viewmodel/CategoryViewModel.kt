@@ -20,7 +20,7 @@ class CategoryViewModel(
 
     fun getCategories() {
         viewModelScope.launch {
-            _categories.value = categoryRepository.getAll()
+            _categories.value = categoryRepository.getAllCategories()
         }
     }
 

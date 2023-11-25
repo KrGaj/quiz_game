@@ -20,7 +20,7 @@ class GivenAnswerViewModel(
         Timer.stop()
         viewModelScope.launch {
             delay(DELAY)
-            givenAnswerRepository.insert(answer)
+            givenAnswerRepository.insertAnswer(answer)
             _quizResults.add(QuizResult(answer.question.text, answer.correct))
             callback()
         }

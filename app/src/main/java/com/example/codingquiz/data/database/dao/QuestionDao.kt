@@ -9,7 +9,7 @@ import com.example.codingquiz.data.database.entity.QuestionWithPossibleAnswers
 interface QuestionDao {
     @Transaction
     @Query("SELECT * FROM questions WHERE category = :categoryId ORDER BY RANDOM() LIMIT :quantity")
-    suspend fun getRandom(
+    suspend fun getRandomQuestions(
         quantity: Int,
         categoryId: Int,
     ): List<QuestionWithPossibleAnswers>

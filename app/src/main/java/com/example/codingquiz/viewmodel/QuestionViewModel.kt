@@ -26,7 +26,7 @@ class QuestionViewModel(
     fun fetchQuestions(categoryId: Int?) {
         viewModelScope.launch {
             categoryId?.let {
-                questions = questionRepository.getRandom(
+                questions = questionRepository.getRandomQuestions(
                     quantity = QUESTION_COUNT,
                     categoryId = it,
                 )
