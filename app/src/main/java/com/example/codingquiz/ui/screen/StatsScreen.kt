@@ -7,12 +7,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.codingquiz.R
 import com.example.codingquiz.data.domain.AnsweredQuestionsCountStats
 import com.example.codingquiz.data.domain.CategoryStats
@@ -39,9 +39,12 @@ fun StatsScreen(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
-            val categoryStats by statsViewModel.categoryStats.collectAsState()
-            val answeredQuestionsStats by statsViewModel.answeredQuestionsCount.collectAsState()
-            val correctAnswersStats by statsViewModel.correctAnswersCount.collectAsState()
+            val categoryStats by statsViewModel.categoryStats
+                .collectAsStateWithLifecycle()
+            val answeredQuestionsStats by statsViewModel.answeredQuestionsCount
+                .collectAsStateWithLifecycle()
+            val correctAnswersStats by statsViewModel.correctAnswersCount
+                .collectAsStateWithLifecycle()
 
             StatsLabel()
             CategoryStats(statsList = categoryStats)

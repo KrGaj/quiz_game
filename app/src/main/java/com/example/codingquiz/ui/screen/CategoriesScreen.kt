@@ -14,13 +14,13 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.codingquiz.R
 import com.example.codingquiz.data.domain.Category
 import com.example.codingquiz.ui.common.HeaderTextLarge
@@ -33,9 +33,9 @@ import org.koin.androidx.compose.koinViewModel
 fun CategoriesScreen(
     categoryViewModel: CategoryViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
-    navigateOnItemClicked: (Category) -> Unit,
+    navigateToQuestionScreen: (Category) -> Unit,
 ) {
-    val categories by categoryViewModel.categories.collectAsState()
+    val categories by categoryViewModel.categories.collectAsStateWithLifecycle()
 
     BackHandler {
         onBackPressed()
@@ -47,7 +47,7 @@ fun CategoriesScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             CategoriesLabel()
-            CategoryGrid(categories = categories, navigateOnItemClicked)
+            CategoryGrid(categories = categories, navigateToQuestionScreen)
         }
     }
 }

@@ -15,7 +15,6 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.codingquiz.R
 import com.example.codingquiz.data.domain.Category
 import com.example.codingquiz.data.domain.GivenAnswer
@@ -54,12 +54,12 @@ fun QuestionScreen(
     onBackPressed: (List<QuizResult>) -> Unit,
     navigateToResults: (List<QuizResult>) -> Unit,
 ) {
-    val question by questionViewModel.question.collectAsState()
-    val questionNumber by questionViewModel.questionNumber.collectAsState()
+    val question by questionViewModel.question.collectAsStateWithLifecycle()
+    val questionNumber by questionViewModel.questionNumber.collectAsStateWithLifecycle()
     val answerState = remember {
         AnswerState()
     }
-    val timeLeft by questionViewModel.timeLeft.collectAsState()
+    val timeLeft by questionViewModel.timeLeft.collectAsStateWithLifecycle()
     val answerAddCallback = {
         if (questionViewModel.isQuestionLast()) {
             navigateToResults(givenAnswerViewModel.quizResults)
