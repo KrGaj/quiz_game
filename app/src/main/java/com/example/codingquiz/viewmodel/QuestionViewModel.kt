@@ -3,7 +3,7 @@ package com.example.codingquiz.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.codingquiz.data.domain.Question
-import com.example.codingquiz.repository.QuestionRepository
+import com.example.codingquiz.data.repository.QuestionRepository
 import com.example.codingquiz.util.Timer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

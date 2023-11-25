@@ -1,4 +1,4 @@
-package com.example.codingquiz.repository
+package com.example.codingquiz.data.repository
 
 import com.example.codingquiz.data.database.dao.StatsDao
 import com.example.codingquiz.data.domain.AnsweredQuestionsCountStats

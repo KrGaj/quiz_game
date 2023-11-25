@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.codingquiz.data.domain.AnsweredQuestionsCountStats
 import com.example.codingquiz.data.domain.CategoryStats
 import com.example.codingquiz.data.domain.CorrectAnswersStats
-import com.example.codingquiz.repository.StatsRepository
+import com.example.codingquiz.data.repository.StatsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

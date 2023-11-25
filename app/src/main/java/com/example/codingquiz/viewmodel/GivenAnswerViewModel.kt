@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.codingquiz.data.domain.GivenAnswer
 import com.example.codingquiz.data.domain.QuizResult
-import com.example.codingquiz.repository.GivenAnswerRepository
+import com.example.codingquiz.data.repository.GivenAnswerRepository
 import com.example.codingquiz.util.Timer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
