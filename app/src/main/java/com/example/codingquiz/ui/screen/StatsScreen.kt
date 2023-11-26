@@ -78,7 +78,9 @@ private fun CategoryStatsLabel() {
 
 @Composable
 private fun CategoryStatsList(statsList: List<CategoryStats>) {
-    LazyColumn {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         val statsListSorted = statsList.sortedByDescending { it.answersGiven }
         items(statsListSorted) {
             CategoryStatsRow(it)

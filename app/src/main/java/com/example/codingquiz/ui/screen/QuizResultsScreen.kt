@@ -9,17 +9,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.codingquiz.R
 import com.example.codingquiz.data.domain.QuizResult
-import com.example.codingquiz.ui.common.TwoTextsRow
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 import com.example.codingquiz.viewmodel.QuizResultsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -60,9 +61,7 @@ private fun Score(
     allAnswers: Int,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
+        modifier = Modifier.fillMaxWidth(),
     ) {
         val scoreText = stringResource(
             R.string.quiz_results_score,
@@ -82,7 +81,9 @@ private fun Score(
 
 @Composable
 private fun QuizResultsList(results: List<QuizResult>) {
-    LazyColumn {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         items(results) {
             QuizResult(it)
         }
@@ -96,10 +97,34 @@ private fun QuizResult(quizResult: QuizResult) {
         else R.string.quiz_results_wrong
     )
 
-    TwoTextsRow(
-        leftText = quizResult.questionText,
-        rightText = isAnswerCorrectInfo,
-    )
+    val rightTextColor =
+        if (quizResult.isAnswerCorrect) Color.Green
+        else Color.Red
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Card(
+            modifier = Modifier.weight(0.75f),
+        ) {
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text = quizResult.questionText,
+            )
+        }
+
+        Card(
+            modifier = Modifier.weight(0.25f),
+            colors = CardDefaults.cardColors(containerColor = rightTextColor),
+        ) {
+            Text(
+                modifier = Modifier.padding(8.dp).fillMaxWidth(),
+                text = isAnswerCorrectInfo,
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
 }
 
 @Composable
