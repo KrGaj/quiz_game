@@ -6,6 +6,11 @@
         <item quantity="other">%1$d seconds left</item>
     </plurals>
 
+    <string name="navigation_categories_label">Categories</string>
+    <string name="navigation_question_label">Question</string>
+    <string name="navigation_results_label">Summary</string>
+    <string name="navigation_stats_label">Statistics</string>
+
     <string name="categories_header">Categories</string>
     <string name="question_header">%1$s: Question %2$d</string>
 

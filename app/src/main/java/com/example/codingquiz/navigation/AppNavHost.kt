@@ -33,7 +33,7 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavigationConstants.CATEGORIES_SCREEN,
+        startDestination = Screen.Categories.route,
     ) {
         configureCategoriesScreenRoute(
             navGraphBuilder = this,
@@ -71,18 +71,18 @@ private fun configureCategoriesScreenRoute(
     navController: NavController,
 ) {
     navGraphBuilder.composable(
-        route = NavigationConstants.CATEGORIES_SCREEN,
+        route = Screen.Categories.route,
     ) {
         CategoriesScreen(
             onBackPressed = {
-                navController.navigate(NavigationConstants.EXIT_APP_DIALOG)
+                navController.navigate(Dialog.ExitApp.route)
             }
         ) {
             navController.navigate(
-                route = "${NavigationConstants.QUESTION_SCREEN}/${encodeCategory(it)}",
+                route = "${Screen.Question.route}/${encodeCategory(it)}",
             ) {
                 popUpTo(
-                    NavigationConstants.CATEGORIES_SCREEN,
+                    Screen.Categories.route,
                 ) {
                     inclusive = true
                 }
@@ -96,8 +96,8 @@ private fun configureQuestionScreenRoute(
     navController: NavController,
 ) {
     navGraphBuilder.composable(
-        route = "${NavigationConstants.QUESTION_SCREEN}/{${NavigationConstants.CATEGORY_ARG}}",
-        arguments = listOf(navArgument(NavigationConstants.CATEGORY_ARG) {
+        route = "${Screen.Question.route}/{${Screen.Question.navArg}}",
+        arguments = listOf(navArgument(Screen.Question.navArg) {
             type = CategoryNavType()
         }),
     ) { backStackEntry ->
@@ -105,7 +105,7 @@ private fun configureQuestionScreenRoute(
             category = deserializeCategory(backStackEntry),
             onBackPressed = {
                 val resultsJson = encodeQuizResults(it)
-                navController.navigate("${NavigationConstants.EXIT_QUIZ_DIALOG}/$resultsJson")
+                navController.navigate("${Dialog.ExitQuiz.route}/$resultsJson")
             },
             navigateToResults = { navigateToResultsScreen(it, navController) },
         )
@@ -117,8 +117,8 @@ private fun configureQuizResultsScreen(
     navController: NavController,
 ) {
     navGraphBuilder.composable(
-        route = "${NavigationConstants.QUIZ_RESULTS_SCREEN}/{${NavigationConstants.QUIZ_RESULTS_ARG}}",
-        arguments = listOf(navArgument(NavigationConstants.QUIZ_RESULTS_ARG) {
+        route = "${Screen.QuizSummary.route}/{${Screen.QuizSummary.navArg}}",
+        arguments = listOf(navArgument(Screen.QuizSummary.navArg) {
             type = QuizResultNavType()
         }),
     ) { backStackEntry ->
@@ -136,7 +136,7 @@ private fun configureStatsScreen(
     navGraphBuilder: NavGraphBuilder,
 ) {
     navGraphBuilder.composable(
-        route = NavigationConstants.STATS_SCREEN,
+        route = Screen.Statistics.route,
     ) {
         StatsScreen()
     }
@@ -147,12 +147,12 @@ private fun configureExitQuizDialog(
     navController: NavController,
 ) {
     navGraphBuilder.dialog(
-        route = "${NavigationConstants.EXIT_QUIZ_DIALOG}/{${NavigationConstants.QUIZ_RESULTS_ARG}}",
+        route = "${Dialog.ExitQuiz.route}/{${Dialog.ExitQuiz.navArg}}",
         dialogProperties = DialogProperties(
             dismissOnBackPress = true,
             dismissOnClickOutside = true,
         ),
-        arguments = listOf(navArgument(NavigationConstants.QUIZ_RESULTS_ARG) {
+        arguments = listOf(navArgument(Dialog.ExitQuiz.navArg) {
             type = QuizResultNavType()
         })
     ) { backStackEntry ->
@@ -162,8 +162,8 @@ private fun configureExitQuizDialog(
             onDismissRequest = { navController.popBackStack() },
             onConfirmation = {
                 if (results.isEmpty()) {
-                    navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
-                        popUpTo(NavigationConstants.QUESTION_SCREEN) {
+                    navController.navigate(Screen.Categories.route) {
+                        popUpTo(Screen.Question.route) {
                             inclusive = true
                         }
                     }
@@ -180,7 +180,7 @@ private fun configureExitAppDialog(
     navController: NavController,
 ) {
     navGraphBuilder.dialog(
-        route = NavigationConstants.EXIT_APP_DIALOG,
+        route = Dialog.ExitApp.route,
         dialogProperties = DialogProperties(
             dismissOnBackPress = true,
             dismissOnClickOutside = true,
@@ -203,17 +203,17 @@ private fun navigateToResultsScreen(
 ) {
     val resultsJson = encodeQuizResults(results)
     navController.navigate(
-        route = "${NavigationConstants.QUIZ_RESULTS_SCREEN}/$resultsJson"
+        route = "${Screen.QuizSummary.route}/$resultsJson"
     ) {
-        popUpTo(NavigationConstants.QUESTION_SCREEN) {
+        popUpTo(Screen.Question.route) {
             inclusive = true
         }
     }
 }
 
 private fun backToCategoriesInclusive(navController: NavController) {
-    navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
-        popUpTo(NavigationConstants.QUIZ_RESULTS_SCREEN) {
+    navController.navigate(Screen.Categories.route) {
+        popUpTo(Screen.QuizSummary.route) {
             inclusive = true
         }
     }
@@ -228,9 +228,9 @@ private fun deserializeCategory(
 ): Category? =
     backStackEntry.arguments?.let {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            it.getParcelable(NavigationConstants.CATEGORY_ARG, Category::class.java)
+            it.getParcelable(Screen.Question.navArg, Category::class.java)
         } else {
-            it.getParcelable(NavigationConstants.CATEGORY_ARG)
+            it.getParcelable(Screen.Question.navArg)
         }
     }
 
@@ -243,8 +243,8 @@ private fun deserializeQuizResults(
 ): List<QuizResult> =
     backStackEntry.arguments?.let {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            it.getParcelable(NavigationConstants.QUIZ_RESULTS_ARG, QuizResults::class.java)
+            it.getParcelable(Screen.QuizSummary.navArg, QuizResults::class.java)
         } else {
-            it.getParcelable(NavigationConstants.QUIZ_RESULTS_ARG)
+            it.getParcelable(Screen.QuizSummary.navArg)
         }
     }?.results ?: emptyList()

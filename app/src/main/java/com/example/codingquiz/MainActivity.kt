@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -27,7 +28,7 @@ import com.example.codingquiz.di.databaseModule
 import com.example.codingquiz.di.repositoryModule
 import com.example.codingquiz.di.viewModelModule
 import com.example.codingquiz.navigation.AppNavHost
-import com.example.codingquiz.navigation.NavigationConstants
+import com.example.codingquiz.navigation.Screen
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -58,8 +59,8 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         bottomBar = {
                             when (navBackStackEntry?.destination?.route) {
-                                NavigationConstants.CATEGORIES_SCREEN,
-                                NavigationConstants.STATS_SCREEN -> BottomNavBar(
+                                Screen.Categories.route,
+                                Screen.Statistics.route -> BottomNavBar(
                                     navController = navController,
                                     navBackStackEntry = navBackStackEntry,
                                 )
@@ -88,9 +89,9 @@ class MainActivity : ComponentActivity() {
     ) {
         BottomNavigation {
             BottomNavigationItem(
-                selected = navBackStackEntry?.destination?.route == NavigationConstants.CATEGORIES_SCREEN,
+                selected = navBackStackEntry?.destination?.route == Screen.Categories.route,
                 onClick = {
-                    navController.navigate(NavigationConstants.CATEGORIES_SCREEN) {
+                    navController.navigate(Screen.Categories.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             inclusive = true
                         }
@@ -102,19 +103,23 @@ class MainActivity : ComponentActivity() {
                         contentDescription = null
                     )
                 },
-                label = { Text(text = "Categories") },
+                label = {
+                    Text(text = stringResource(id = Screen.Categories.resourceId))
+                },
             )
 
             BottomNavigationItem(
-                selected = navBackStackEntry?.destination?.route == NavigationConstants.STATS_SCREEN,
-                onClick = { navController.navigate(NavigationConstants.STATS_SCREEN) },
+                selected = navBackStackEntry?.destination?.route == Screen.Statistics.route,
+                onClick = { navController.navigate(Screen.Statistics.route) },
                 icon = {
                     Icon(
                         Icons.Filled.Info,
                         contentDescription = null
                     )
                 },
-                label = { Text(text = "Stats") },
+                label = {
+                    Text(text = stringResource(id = Screen.Statistics.resourceId))
+                },
             )
         }
     }
