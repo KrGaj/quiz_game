@@ -59,7 +59,7 @@ fun QuestionScreen(
     navigateToResults: (List<QuizResult>) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val question by questionViewModel.question.collectAsStateWithLifecycle()
+    val question by questionViewModel.questionWithIndex.collectAsStateWithLifecycle()
     val questionNumber by questionViewModel.questionNumber.collectAsStateWithLifecycle()
     val answerState = remember {
         AnswerState()

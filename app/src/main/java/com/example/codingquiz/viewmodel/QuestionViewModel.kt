@@ -13,10 +13,11 @@ import kotlin.time.Duration.Companion.seconds
 class QuestionViewModel(
     private val questionRepository: QuestionRepository,
 ) : ViewModel() {
-    private var questions = emptyList<Question>()
-    private var questionIterator = questions.iterator().withIndex()
-    private val _question = MutableStateFlow(Question(0, 0, "Questions not loaded yet", emptyList()))
-    val question get() = _question.asStateFlow()
+    private lateinit var questionIterator: Iterator<IndexedValue<Question>>
+    private val _questionWithIndex = MutableStateFlow(
+        value = Question(0, 0, "Questions not loaded yet", emptyList()),
+    )
+    val questionWithIndex get() = _questionWithIndex.asStateFlow()
 
     private val _questionNumber = MutableStateFlow(0)
     val questionNumber = _questionNumber.asStateFlow()
@@ -25,12 +26,12 @@ class QuestionViewModel(
 
     fun fetchQuestions(categoryId: Int?) {
         viewModelScope.launch {
-            categoryId?.let {
-                questions = questionRepository.getRandomQuestions(
+            val questions = categoryId?.let {
+                questionRepository.getRandomQuestions(
                     quantity = QUESTION_COUNT,
                     categoryId = it,
                 )
-            }
+            } ?: emptyList()
 
             questionIterator = questions.iterator().withIndex()
             nextQuestion()
@@ -42,7 +43,7 @@ class QuestionViewModel(
     fun nextQuestion() {
         if (!isQuestionLast()) {
             val questionWithIndex = questionIterator.next()
-            _question.value = questionWithIndex.value
+            _questionWithIndex.value = questionWithIndex.value
             _questionNumber.value = questionWithIndex.index + 1
             Timer.start(TIMEOUT)
         }
