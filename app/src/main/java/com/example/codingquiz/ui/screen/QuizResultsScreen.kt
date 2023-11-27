@@ -2,9 +2,14 @@ package com.example.codingquiz.ui.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +18,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -102,7 +108,7 @@ private fun QuizResult(quizResult: QuizResult) {
         else Color.Red
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.height(intrinsicSize = IntrinsicSize.Max),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Card(
@@ -115,14 +121,20 @@ private fun QuizResult(quizResult: QuizResult) {
         }
 
         Card(
-            modifier = Modifier.weight(0.25f),
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(0.25f),
             colors = CardDefaults.cardColors(containerColor = rightTextColor),
         ) {
-            Text(
-                modifier = Modifier.padding(8.dp).fillMaxWidth(),
-                text = isAnswerCorrectInfo,
-                textAlign = TextAlign.Center,
-            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = isAnswerCorrectInfo,
+                )
+            }
         }
     }
 }
@@ -148,15 +160,12 @@ private fun PreviewScore() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-private fun PreviewQuizResult() {
+private fun PreviewQuizResultsList() {
     CodingQuizTheme {
-        QuizResult(
-            quizResult = QuizResult(
-                "Demo Question 1",
-                false,
-            )
+        QuizResultsList(
+            results = quizResults,
         )
     }
 }
@@ -168,3 +177,18 @@ private fun PreviewFinishButton() {
         FinishButton {}
     }
 }
+
+private val quizResults = listOf(
+    QuizResult(
+        "Demo Question 1",
+        false,
+    ),
+    QuizResult(
+        "Demo Question 2",
+        true,
+    ),
+    QuizResult(
+        "Demo Question 3, but very very very long for preview purposes",
+        true,
+    ),
+)
