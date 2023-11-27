@@ -21,7 +21,7 @@ import com.example.codingquiz.ui.dialogs.ExitAppDialog
 import com.example.codingquiz.ui.dialogs.ExitQuizDialog
 import com.example.codingquiz.ui.screen.CategoriesScreen
 import com.example.codingquiz.ui.screen.QuestionScreen
-import com.example.codingquiz.ui.screen.QuizResultsScreen
+import com.example.codingquiz.ui.screen.QuizSummaryScreen
 import com.example.codingquiz.ui.screen.StatsScreen
 import com.example.codingquiz.util.findActivity
 import kotlinx.serialization.encodeToString
@@ -124,7 +124,7 @@ private fun configureQuizResultsScreen(
     ) { backStackEntry ->
         val results = deserializeQuizResults(backStackEntry)
 
-        QuizResultsScreen(
+        QuizSummaryScreen(
             quizResults = results,
             onBackPressed = { backToCategoriesInclusive(navController) },
             navigateToCategories = { backToCategoriesInclusive(navController) },

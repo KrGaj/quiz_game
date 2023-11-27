@@ -33,7 +33,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun QuizResultsScreen(
+fun QuizSummaryScreen(
     quizResults: List<QuizResult>,
     quizResultsViewModel: QuizResultsViewModel = koinViewModel { parametersOf(quizResults) },
     onBackPressed: () -> Unit,
