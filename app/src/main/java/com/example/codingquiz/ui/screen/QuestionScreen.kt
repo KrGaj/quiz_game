@@ -41,9 +41,11 @@ import com.example.codingquiz.ui.common.SpacedLazyVerticalGrid
 import com.example.codingquiz.ui.theme.CodingQuizTheme
 import com.example.codingquiz.viewmodel.GivenAnswerViewModel
 import com.example.codingquiz.viewmodel.QuestionViewModel
+import com.example.codingquiz.viewmodel.TimerViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import kotlin.time.Duration.Companion.seconds
 
 class AnswerState {
@@ -55,6 +57,7 @@ class AnswerState {
 fun QuestionScreen(
     questionViewModel: QuestionViewModel = koinViewModel(),
     givenAnswerViewModel: GivenAnswerViewModel = koinViewModel(),
+    timerViewModel: TimerViewModel = koinViewModel { parametersOf(QuestionViewModel.TIMEOUT) },
     category: Category,
     onBackPressed: (List<QuizResult>) -> Unit,
     navigateToResults: (List<QuizResult>) -> Unit,
@@ -62,18 +65,25 @@ fun QuestionScreen(
     val coroutineScope = rememberCoroutineScope()
     val question by questionViewModel.questionWithIndex.collectAsStateWithLifecycle()
     val questionNumber by questionViewModel.questionNumber.collectAsStateWithLifecycle()
+    val timeLeft by timerViewModel.timeLeft.collectAsStateWithLifecycle()
+
     val answerState = remember {
         AnswerState()
     }
-    val timeLeft by questionViewModel.timeLeft.collectAsStateWithLifecycle()
+
     val answerAddCallback = {
         if (questionViewModel.isQuestionLast()) {
             navigateToResults(givenAnswerViewModel.quizResults)
         } else {
             answerState.isAnyAnswerChosen = false
             answerState.isTimeOut = false
+            timerViewModel.clear()
             questionViewModel.nextQuestion()
         }
+    }
+
+    LaunchedEffect(question.id) {
+        timerViewModel.start()
     }
 
     BackHandler {
@@ -99,6 +109,7 @@ fun QuestionScreen(
                 if (!answerState.isAnyAnswerChosen) {
                     coroutineScope.launch {
                         answerState.isAnyAnswerChosen = true
+                        timerViewModel.clear()
                         givenAnswerViewModel.addAnswer(
                             answer = GivenAnswer(
                                 question = question,
@@ -173,7 +184,6 @@ private fun AnswersGrid(
     ) {
         items(answers) {
             val shouldChangeColor = (isAnyAnswerChosen() || isTimeOut())
-
             val color = if (shouldChangeColor && it.isCorrect) Color.Green
                 else if (shouldChangeColor) Color.Red
                 else Color.Gray
