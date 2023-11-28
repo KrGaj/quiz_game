@@ -19,7 +19,7 @@ import androidx.navigation.navArgument
 import com.example.codingquiz.R
 import com.example.codingquiz.data.domain.Category
 import com.example.codingquiz.data.domain.QuizResult
-import com.example.codingquiz.data.domain.QuizResults
+import com.example.codingquiz.data.domain.QuizSummary
 import com.example.codingquiz.ui.dialogs.ExitAppDialog
 import com.example.codingquiz.ui.dialogs.ExitQuizDialog
 import com.example.codingquiz.ui.screen.CategoriesScreen
@@ -28,7 +28,7 @@ import com.example.codingquiz.ui.screen.QuizSummaryScreen
 import com.example.codingquiz.ui.screen.StatsScreen
 import com.example.codingquiz.util.findActivity
 import com.example.codingquiz.util.navtype.CategoryNavType
-import com.example.codingquiz.util.navtype.QuizResultNavType
+import com.example.codingquiz.util.navtype.QuizSummaryNavType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -136,7 +136,7 @@ private fun configureQuizResultsScreen(
     navGraphBuilder.composable(
         route = "${Screen.QuizSummary.route}/{${Screen.QuizSummary.navArg}}",
         arguments = listOf(navArgument(Screen.QuizSummary.navArg) {
-            type = QuizResultNavType()
+            type = QuizSummaryNavType()
         }),
     ) { backStackEntry ->
         val results = deserializeQuizResults(backStackEntry)
@@ -170,7 +170,7 @@ private fun configureExitQuizDialog(
             dismissOnClickOutside = true,
         ),
         arguments = listOf(navArgument(Dialog.ExitQuiz.navArg) {
-            type = QuizResultNavType()
+            type = QuizSummaryNavType()
         })
     ) { backStackEntry ->
         val results = deserializeQuizResults(backStackEntry)
@@ -253,14 +253,14 @@ private fun deserializeCategory(
 
 private fun encodeQuizResults(
     results: List<QuizResult>,
-): String = Uri.encode(Json.encodeToString(QuizResults(results)))
+): String = Uri.encode(Json.encodeToString(QuizSummary(results)))
 
 private fun deserializeQuizResults(
     backStackEntry: NavBackStackEntry,
 ): List<QuizResult> =
     backStackEntry.arguments?.let {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            it.getParcelable(Screen.QuizSummary.navArg, QuizResults::class.java)
+            it.getParcelable(Screen.QuizSummary.navArg, QuizSummary::class.java)
         } else {
             it.getParcelable(Screen.QuizSummary.navArg)
         }
