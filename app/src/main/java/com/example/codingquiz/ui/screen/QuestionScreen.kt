@@ -3,6 +3,7 @@ package com.example.codingquiz.ui.screen
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -194,12 +195,14 @@ private fun PossibleAnswer(
     onClick: () -> Unit,
 ) {
     FilledTonalButton(
+        modifier = Modifier.aspectRatio(1.5f),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(color),
         onClick = onClick,
     ) {
         Text(
             text = answer.text,
+            textAlign = TextAlign.Center,
         )
     }
 }
