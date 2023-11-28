@@ -54,11 +54,11 @@ class AnswerState {
 fun QuestionScreen(
     questionViewModel: QuestionViewModel = koinViewModel(),
     givenAnswerViewModel: GivenAnswerViewModel = koinViewModel(),
-    category: Category?,
+    category: Category,
     onBackPressed: (List<QuizResult>) -> Unit,
     navigateToResults: (List<QuizResult>) -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     val question by questionViewModel.questionWithIndex.collectAsStateWithLifecycle()
     val questionNumber by questionViewModel.questionNumber.collectAsStateWithLifecycle()
     val answerState = remember {
@@ -80,13 +80,13 @@ fun QuestionScreen(
     }
 
     CodingQuizTheme {
-        LaunchedEffect(Unit) { questionViewModel.fetchQuestions(category?.id) }
+        LaunchedEffect(Unit) { questionViewModel.fetchQuestions(category.id) }
         Column(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             QuestionHeader(
-                categoryName = category?.name ?: "",
+                categoryName = category.name,
                 questionNumber = questionNumber,
             )
             QuestionText(question)
@@ -96,7 +96,7 @@ fun QuestionScreen(
                 { answerState.isTimeOut },
             ) {
                 if (!answerState.isAnyAnswerChosen) {
-                    scope.launch {
+                    coroutineScope.launch {
                         answerState.isAnyAnswerChosen = true
                         givenAnswerViewModel.addAnswer(
                             answer = GivenAnswer(

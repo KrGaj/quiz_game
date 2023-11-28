@@ -1,8 +1,12 @@
 package com.example.codingquiz.navigation
 
 import android.net.Uri
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -12,8 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
-import com.example.codingquiz.util.navtype.CategoryNavType
-import com.example.codingquiz.util.navtype.QuizResultNavType
+import com.example.codingquiz.R
 import com.example.codingquiz.data.domain.Category
 import com.example.codingquiz.data.domain.QuizResult
 import com.example.codingquiz.data.domain.QuizResults
@@ -24,6 +27,8 @@ import com.example.codingquiz.ui.screen.QuestionScreen
 import com.example.codingquiz.ui.screen.QuizSummaryScreen
 import com.example.codingquiz.ui.screen.StatsScreen
 import com.example.codingquiz.util.findActivity
+import com.example.codingquiz.util.navtype.CategoryNavType
+import com.example.codingquiz.util.navtype.QuizResultNavType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -31,6 +36,8 @@ import kotlinx.serialization.json.Json
 fun AppNavHost(
     navController: NavHostController,
 ) {
+    val scaffoldState = rememberScaffoldState()
+
     NavHost(
         navController = navController,
         startDestination = Screen.Categories.route,
@@ -43,6 +50,7 @@ fun AppNavHost(
         configureQuestionScreenRoute(
             navGraphBuilder = this,
             navController,
+            scaffoldState,
         )
 
         configureQuizResultsScreen(
@@ -94,6 +102,7 @@ private fun configureCategoriesScreenRoute(
 private fun configureQuestionScreenRoute(
     navGraphBuilder: NavGraphBuilder,
     navController: NavController,
+    scaffoldState: ScaffoldState,
 ) {
     navGraphBuilder.composable(
         route = "${Screen.Question.route}/{${Screen.Question.navArg}}",
@@ -101,14 +110,22 @@ private fun configureQuestionScreenRoute(
             type = CategoryNavType()
         }),
     ) { backStackEntry ->
-        QuestionScreen(
-            category = deserializeCategory(backStackEntry),
-            onBackPressed = {
-                val resultsJson = encodeQuizResults(it)
-                navController.navigate("${Dialog.ExitQuiz.route}/$resultsJson")
-            },
-            navigateToResults = { navigateToResultsScreen(it, navController) },
-        )
+        deserializeCategory(backStackEntry)?.let { category ->
+            QuestionScreen(
+                category = category,
+                onBackPressed = {
+                    val resultsJson = encodeQuizResults(it)
+                    navController.navigate("${Dialog.ExitQuiz.route}/$resultsJson")
+                },
+                navigateToResults = { navigateToResultsScreen(it, navController) },
+            )
+        } ?: run {
+            val message = stringResource(id = R.string.navigation_question_error)
+
+            LaunchedEffect(Unit) {
+                scaffoldState.snackbarHostState.showSnackbar(message)
+            }
+        }
     }
 }
 

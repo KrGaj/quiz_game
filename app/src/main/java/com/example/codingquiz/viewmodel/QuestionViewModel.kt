@@ -24,14 +24,12 @@ class QuestionViewModel(
 
     val timeLeft get() = Timer.timeLeft
 
-    fun fetchQuestions(categoryId: Int?) {
+    fun fetchQuestions(categoryId: Int) {
         viewModelScope.launch {
-            val questions = categoryId?.let {
-                questionRepository.getRandomQuestions(
-                    quantity = QUESTION_COUNT,
-                    categoryId = it,
-                )
-            } ?: emptyList()
+            val questions = questionRepository.getRandomQuestions(
+                quantity = QUESTION_COUNT,
+                categoryId = categoryId,
+            )
 
             questionIterator = questions.iterator().withIndex()
             nextQuestion()
