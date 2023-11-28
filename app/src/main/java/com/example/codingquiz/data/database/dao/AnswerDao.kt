@@ -5,7 +5,7 @@ import androidx.room.Insert
 import com.example.codingquiz.data.database.entity.AnswerEntity
 
 @Dao
-interface AnswerDao {
+fun interface AnswerDao {
     @Insert
     suspend fun insertAnswer(answer: AnswerEntity): Long
 }

@@ -6,7 +6,7 @@ import androidx.room.Transaction
 import com.example.codingquiz.data.database.entity.QuestionWithPossibleAnswers
 
 @Dao
-interface QuestionDao {
+fun interface QuestionDao {
     @Transaction
     @Query("SELECT * FROM questions WHERE category = :categoryId ORDER BY RANDOM() LIMIT :quantity")
     suspend fun getRandomQuestions(

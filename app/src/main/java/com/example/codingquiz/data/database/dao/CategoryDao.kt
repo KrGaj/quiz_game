@@ -5,7 +5,7 @@ import androidx.room.Query
 import com.example.codingquiz.data.database.entity.CategoryEntity
 
 @Dao
-interface CategoryDao {
+fun interface CategoryDao {
     @Query("SELECT * FROM categories")
     suspend fun getAllCategories(): List<CategoryEntity>
 }
