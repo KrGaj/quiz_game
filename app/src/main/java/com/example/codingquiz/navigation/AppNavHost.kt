@@ -20,8 +20,7 @@ import com.example.codingquiz.R
 import com.example.codingquiz.data.domain.Category
 import com.example.codingquiz.data.domain.QuizResult
 import com.example.codingquiz.data.domain.QuizSummary
-import com.example.codingquiz.ui.dialogs.ExitAppDialog
-import com.example.codingquiz.ui.dialogs.ExitQuizDialog
+import com.example.codingquiz.ui.dialogs.ExitDialog
 import com.example.codingquiz.ui.screen.CategoriesScreen
 import com.example.codingquiz.ui.screen.QuestionScreen
 import com.example.codingquiz.ui.screen.QuizSummaryScreen
@@ -175,7 +174,8 @@ private fun configureExitQuizDialog(
     ) { backStackEntry ->
         val results = deserializeQuizResults(backStackEntry)
 
-        ExitQuizDialog(
+        ExitDialog(
+            message = stringResource(id = R.string.quiz_exit_message),
             onDismissRequest = { navController.popBackStack() },
             onConfirmation = {
                 if (results.isEmpty()) {
@@ -205,7 +205,8 @@ private fun configureExitAppDialog(
     ) {
         val context = LocalContext.current
 
-        ExitAppDialog(
+        ExitDialog(
+            message = stringResource(id = R.string.app_exit_message),
             onDismissRequest = { navController.popBackStack() },
             onConfirmation = {
                 context.findActivity().finish()

@@ -77,7 +77,6 @@ fun QuestionScreen(
         } else {
             answerState.isAnyAnswerChosen = false
             answerState.isTimeOut = false
-            timerViewModel.clear()
             questionViewModel.nextQuestion()
         }
     }
@@ -126,15 +125,16 @@ fun QuestionScreen(
     }
 
     if (timeLeft == 0L) {
-        answerState.isTimeOut = true
-
         LaunchedEffect(Unit) {
+            answerState.isTimeOut = true
+
             givenAnswerViewModel.addAnswer(
                 answer = GivenAnswer(
                     question = question,
                     correct = false,
                 ),
             )
+
             delay(1.seconds)
             answerAddCallback()
         }
