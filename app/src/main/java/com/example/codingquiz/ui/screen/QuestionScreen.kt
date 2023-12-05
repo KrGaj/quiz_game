@@ -67,8 +67,8 @@ fun QuestionScreen(
     val questionNumber by questionViewModel.questionNumber.collectAsStateWithLifecycle()
     val timeLeft by timerViewModel.timeLeft.collectAsStateWithLifecycle()
 
-    val answerState = remember {
-        AnswerState()
+    val answerState by remember {
+        mutableStateOf(AnswerState())
     }
 
     val answerAddCallback = {
