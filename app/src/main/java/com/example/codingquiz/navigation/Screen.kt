@@ -6,7 +6,6 @@ import com.example.codingquiz.R
 sealed class Screen(
     val route: String,
     @StringRes val resourceId: Int,
-    val navArg: String = "",
 ) {
     data object Categories : Screen(
         route = "Categories",
@@ -16,14 +15,16 @@ sealed class Screen(
     data object Question : Screen(
         route = "Question",
         resourceId = R.string.navigation_question_label,
-        navArg = "category",
-    )
+    ) {
+        const val navArg = "category"
+    }
 
     data object QuizSummary : Screen(
         route = "QuizSummary",
         resourceId = R.string.navigation_results_label,
-        navArg = "quizResults",
-    )
+    ) {
+        const val navArg = "quizResults"
+    }
 
     data object Statistics : Screen(
         route = "Statistics",
