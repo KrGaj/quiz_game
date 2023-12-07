@@ -1,6 +1,7 @@
 package com.example.codingquiz.data.repository
 
 import com.example.codingquiz.data.database.dao.QuestionDao
+import com.example.codingquiz.data.domain.Category
 import com.example.codingquiz.data.domain.PossibleAnswer
 import com.example.codingquiz.data.domain.Question
 
@@ -9,11 +10,11 @@ class QuestionRepositoryDefault(
 ) : QuestionRepository {
     override suspend fun getRandomQuestions(
         quantity: Int,
-        categoryId: Int,
+        category: Category,
     ): List<Question> {
         val questionsEntities = questionDao.getRandomQuestions(
             quantity,
-            categoryId,
+            category.id,
         )
 
         val questions = questionsEntities.map {
@@ -26,7 +27,7 @@ class QuestionRepositoryDefault(
 
             Question(
                 it.question.id,
-                categoryId,
+                category.id,
                 it.question.text,
                 possibleAnswers.shuffled(),
             )

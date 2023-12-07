@@ -2,6 +2,7 @@ package com.example.codingquiz.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.codingquiz.data.domain.Category
 import com.example.codingquiz.data.domain.Question
 import com.example.codingquiz.data.repository.QuestionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,11 +22,11 @@ class QuestionViewModel(
     private val _questionNumber = MutableStateFlow(0)
     val questionNumber = _questionNumber.asStateFlow()
 
-    fun fetchQuestions(categoryId: Int) {
+    fun fetchQuestions(category: Category) {
         viewModelScope.launch {
             val questions = questionRepository.getRandomQuestions(
                 quantity = QUESTION_COUNT,
-                categoryId = categoryId,
+                category = category,
             )
 
             questionIterator = questions.iterator().withIndex()
