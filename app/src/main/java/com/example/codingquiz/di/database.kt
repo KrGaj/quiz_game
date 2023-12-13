@@ -18,4 +18,5 @@ val databaseModule = module {
     single { get<QuizDatabase>().categoryDao() }
     single { get<QuizDatabase>().questionDao() }
     single { get<QuizDatabase>().answerDao() }
+    single { get<QuizDatabase>().statsDao() }
 }

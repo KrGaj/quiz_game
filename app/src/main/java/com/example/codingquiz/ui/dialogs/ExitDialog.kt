@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
 @Composable
-fun BaseQuizDialog(
+fun ExitDialog(
     message: String,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
@@ -54,7 +54,7 @@ fun BaseQuizDialog(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewBaseQuizDialog() {
-    BaseQuizDialog(
+    ExitDialog(
         message = "Test message",
         onDismissRequest = {},
         onConfirmation = {},

@@ -2,9 +2,9 @@ package com.example.codingquiz.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.codingquiz.data.domain.Category
 import com.example.codingquiz.data.domain.Question
-import com.example.codingquiz.repository.QuestionRepository
-import com.example.codingquiz.util.Timer
+import com.example.codingquiz.data.repository.QuestionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -13,23 +13,23 @@ import kotlin.time.Duration.Companion.seconds
 class QuestionViewModel(
     private val questionRepository: QuestionRepository,
 ) : ViewModel() {
-    private var questions = emptyList<Question>()
-    private var questionIterator = questions.iterator()
-    private val _question = MutableStateFlow(Question(0, 0, "Questions not loaded yet", emptyList()))
+    private lateinit var questionIterator: Iterator<IndexedValue<Question>>
+    private val _question = MutableStateFlow(
+        value = Question(0, 0, "Questions not loaded yet", emptyList()),
+    )
     val question get() = _question.asStateFlow()
 
-    val timeLeft get() = Timer.timeLeft
+    private val _questionNumber = MutableStateFlow(0)
+    val questionNumber = _questionNumber.asStateFlow()
 
-    fun fetchQuestions(categoryId: Int?) {
+    fun fetchQuestions(category: Category) {
         viewModelScope.launch {
-            categoryId?.let {
-                questions = questionRepository.getRandom(
-                    quantity = QUESTION_COUNT,
-                    categoryId = it,
-                )
-            }
+            val questions = questionRepository.getRandomQuestions(
+                quantity = QUESTION_COUNT,
+                category = category,
+            )
 
-            questionIterator = questions.iterator()
+            questionIterator = questions.iterator().withIndex()
             nextQuestion()
         }
     }
@@ -38,13 +38,14 @@ class QuestionViewModel(
 
     fun nextQuestion() {
         if (!isQuestionLast()) {
-            _question.value = questionIterator.next()
-            Timer.start(TIMEOUT)
+            val questionWithIndex = questionIterator.next()
+            _question.value = questionWithIndex.value
+            _questionNumber.value = questionWithIndex.index + 1
         }
     }
 
     companion object {
         private const val QUESTION_COUNT = 5
-        private val TIMEOUT = 30.seconds
+        val TIMEOUT = 30.seconds
     }
 }
