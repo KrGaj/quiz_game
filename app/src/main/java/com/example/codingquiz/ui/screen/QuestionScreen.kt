@@ -63,7 +63,7 @@ fun QuestionScreen(
     navigateToResults: (List<QuizResult>) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val question by questionViewModel.questionWithIndex.collectAsStateWithLifecycle()
+    val question by questionViewModel.question.collectAsStateWithLifecycle()
     val questionNumber by questionViewModel.questionNumber.collectAsStateWithLifecycle()
     val timeLeft by timerViewModel.timeLeft.collectAsStateWithLifecycle()
 

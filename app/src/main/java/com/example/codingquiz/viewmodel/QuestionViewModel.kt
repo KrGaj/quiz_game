@@ -14,10 +14,10 @@ class QuestionViewModel(
     private val questionRepository: QuestionRepository,
 ) : ViewModel() {
     private lateinit var questionIterator: Iterator<IndexedValue<Question>>
-    private val _questionWithIndex = MutableStateFlow(
+    private val _question = MutableStateFlow(
         value = Question(0, 0, "Questions not loaded yet", emptyList()),
     )
-    val questionWithIndex get() = _questionWithIndex.asStateFlow()
+    val question get() = _question.asStateFlow()
 
     private val _questionNumber = MutableStateFlow(0)
     val questionNumber = _questionNumber.asStateFlow()
@@ -39,7 +39,7 @@ class QuestionViewModel(
     fun nextQuestion() {
         if (!isQuestionLast()) {
             val questionWithIndex = questionIterator.next()
-            _questionWithIndex.value = questionWithIndex.value
+            _question.value = questionWithIndex.value
             _questionNumber.value = questionWithIndex.index + 1
         }
     }
