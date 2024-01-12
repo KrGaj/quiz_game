@@ -1,7 +1,7 @@
-package com.example.codingquiz.util
+package com.example.codingquiz.viewmodel
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,16 +10,17 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-object Timer {
-    private val scope = CoroutineScope(Dispatchers.IO)
+class TimerViewModel(
+    private val timeout: Duration = 10.seconds,
+) : ViewModel() {
     private var timer: Job? = null
 
-    private val _timeLeft = MutableStateFlow<Long>(10)
+    private val _timeLeft = MutableStateFlow(timeout.inWholeSeconds)
     val timeLeft get() = _timeLeft.asStateFlow()
 
-    fun start(timeout: Duration) {
+    fun start() {
         timer?.cancel()
-        timer = scope.launch {
+        timer = viewModelScope.launch {
             for (time in (timeout.inWholeSeconds downTo 0)) {
                 _timeLeft.value = time
                 delay(1.seconds)
@@ -27,8 +28,9 @@ object Timer {
         }
     }
 
-    fun stop() {
+    fun clear() {
         timer?.cancel()
         timer = null
+        _timeLeft.value = timeout.inWholeSeconds
     }
 }

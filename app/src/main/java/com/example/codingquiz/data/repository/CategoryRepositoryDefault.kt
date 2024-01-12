@@ -1,13 +1,13 @@
-package com.example.codingquiz.repository
+package com.example.codingquiz.data.repository
 
 import com.example.codingquiz.data.database.dao.CategoryDao
 import com.example.codingquiz.data.domain.Category
 
-class CategoryRepository(
+class CategoryRepositoryDefault(
     private val categoryDao: CategoryDao,
-) {
-    suspend fun getAll(): List<Category> =
-        categoryDao.getAll().map {
+) : CategoryRepository {
+    override suspend fun getAllCategories(): List<Category> =
+        categoryDao.getAllCategories().map {
             Category(
                 it.id,
                 it.name,

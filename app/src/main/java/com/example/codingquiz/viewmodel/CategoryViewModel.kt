@@ -3,7 +3,7 @@ package com.example.codingquiz.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.codingquiz.data.domain.Category
-import com.example.codingquiz.repository.CategoryRepository
+import com.example.codingquiz.data.repository.CategoryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -20,7 +20,7 @@ class CategoryViewModel(
 
     fun getCategories() {
         viewModelScope.launch {
-            _categories.value = categoryRepository.getAll()
+            _categories.value = categoryRepository.getAllCategories()
         }
     }
 

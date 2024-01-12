@@ -6,13 +6,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Parcelize
-data class QuizResult(
-    val questionText: String,
-    val isAnswerCorrect: Boolean,
+data class QuizSummary(
+    val results: List<QuizResult>,
 ) : Parcelable
 
 @Serializable
 @Parcelize
-data class QuizResults(
-    val results: List<QuizResult>,
+data class QuizResult(
+    val questionText: String,
+    val isAnswerCorrect: Boolean,
 ) : Parcelable
