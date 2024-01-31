@@ -82,7 +82,8 @@ fun QuestionScreen(
     }
 
     LaunchedEffect(question.id) {
-        timerViewModel.start()
+        if (question != QuestionViewModel.DEFAULT_QUESTION)
+            timerViewModel.start()
     }
 
     BackHandler {

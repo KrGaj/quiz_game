@@ -15,7 +15,7 @@ class QuestionViewModel(
 ) : ViewModel() {
     private lateinit var questionIterator: Iterator<IndexedValue<Question>>
     private val _question = MutableStateFlow(
-        value = Question(0, 0, "Questions not loaded yet", emptyList()),
+        value = DEFAULT_QUESTION,
     )
     val question get() = _question.asStateFlow()
 
@@ -47,5 +47,11 @@ class QuestionViewModel(
     companion object {
         private const val QUESTION_COUNT = 5
         val TIMEOUT = 30.seconds
+        val DEFAULT_QUESTION = Question(
+            id = 0,
+            categoryId = 0,
+            text = "Questions not loaded yet",
+            answers = emptyList(),
+        )
     }
 }
