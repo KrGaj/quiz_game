@@ -5,7 +5,7 @@ import androidx.navigation.NavType
 import com.example.codingquiz.data.domain.Category
 import kotlinx.serialization.json.Json
 
-class CategoryNavType : NavType<Category>(isNullableAllowed = false) {
+object CategoryNavType : NavType<Category>(isNullableAllowed = false) {
     override fun get(bundle: Bundle, key: String): Category? =
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU)
             bundle.getParcelable(key, Category::class.java)

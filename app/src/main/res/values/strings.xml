@@ -17,8 +17,6 @@
     <string name="question_header">%1$s: Question %2$d</string>
 
     <string name="quiz_results_score">Your score: %1$d/%2$d</string>
-    <string name="quiz_results_correct">Correct</string>
-    <string name="quiz_results_wrong">Wrong</string>
     <string name="quiz_results_finish">Finish</string>
 
     <string name="stats_header">Statistics</string>

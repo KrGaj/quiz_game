@@ -1,23 +1,28 @@
 package com.example.codingquiz.ui.screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -95,16 +100,10 @@ private fun QuizResultsList(results: List<QuizResult>) {
 
 @Composable
 private fun QuizResult(quizResult: QuizResult) {
-    val answerIconResources = if (quizResult.isAnswerCorrect) {
-        Pair(
-            painterResource(id = R.drawable.ic_result_answer_correct),
-            stringResource(id = R.string.quiz_results_correct),
-        )
+    val answerCorrectColor = if (quizResult.isAnswerCorrect) {
+        Color(0xFFEF5350)
     } else {
-        Pair(
-            painterResource(id = R.drawable.ic_result_answer_wrong),
-            stringResource(id = R.string.quiz_results_wrong),
-        )
+        Color(0xFF81C784)
     }
 
     Card {
@@ -121,12 +120,19 @@ private fun QuizResult(quizResult: QuizResult) {
                 text = quizResult.questionText,
             )
 
-            Icon(
+            Column(
                 modifier = Modifier
-                    .align(Alignment.CenterVertically),
-                painter = answerIconResources.first,
-                contentDescription = answerIconResources.second,
-            )
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(answerCorrectColor)
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
         }
     }
 }
@@ -144,7 +150,7 @@ private fun FinishButton(navigateToCategories: () -> Unit) {
 }
 
 
-@Preview
+@Preview(showBackground = true, apiLevel = 33)
 @Composable
 private fun PreviewScore() {
     CodingQuizTheme {
@@ -152,7 +158,7 @@ private fun PreviewScore() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, apiLevel = 33)
 @Composable
 private fun PreviewQuizResultsList() {
     CodingQuizTheme {
@@ -162,7 +168,7 @@ private fun PreviewQuizResultsList() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, apiLevel = 33)
 @Composable
 private fun PreviewFinishButton() {
     CodingQuizTheme {

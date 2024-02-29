@@ -106,7 +106,7 @@ private fun configureQuestionScreenRoute(
     navGraphBuilder.composable(
         route = "${Screen.Question.route}/{${Screen.Question.navArg}}",
         arguments = listOf(navArgument(Screen.Question.navArg) {
-            type = CategoryNavType()
+            type = CategoryNavType
         }),
     ) { backStackEntry ->
         deserializeCategory(backStackEntry)?.let { category ->
@@ -135,7 +135,7 @@ private fun configureQuizResultsScreen(
     navGraphBuilder.composable(
         route = "${Screen.QuizSummary.route}/{${Screen.QuizSummary.navArg}}",
         arguments = listOf(navArgument(Screen.QuizSummary.navArg) {
-            type = QuizSummaryNavType()
+            type = QuizSummaryNavType
         }),
     ) { backStackEntry ->
         val results = deserializeQuizResults(backStackEntry)
@@ -169,7 +169,7 @@ private fun configureExitQuizDialog(
             dismissOnClickOutside = true,
         ),
         arguments = listOf(navArgument(Dialog.ExitQuiz.navArg) {
-            type = QuizSummaryNavType()
+            type = QuizSummaryNavType
         })
     ) { backStackEntry ->
         val results = deserializeQuizResults(backStackEntry)
