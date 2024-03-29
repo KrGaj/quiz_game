@@ -18,7 +18,7 @@ class CategoryViewModel(
         getCategories()
     }
 
-    fun getCategories() {
+    private fun getCategories() {
         viewModelScope.launch {
             _categories.value = categoryRepository.getAllCategories()
         }
