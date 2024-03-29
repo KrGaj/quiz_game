@@ -24,33 +24,17 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.codingquiz.di.databaseModule
-import com.example.codingquiz.di.repositoryModule
-import com.example.codingquiz.di.viewModelModule
 import com.example.codingquiz.navigation.AppNavHost
 import com.example.codingquiz.navigation.Screen
 import com.example.codingquiz.ui.theme.CodingQuizTheme
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.compose.KoinApplication
+import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            KoinApplication(application = {
-                androidContext(application)
-                androidLogger()
-
-                modules(
-                    listOf(
-                        databaseModule,
-                        repositoryModule,
-                        viewModelModule,
-                    )
-                )
-            }) {
+            KoinContext {
                 CodingQuizTheme {
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -64,6 +48,7 @@ class MainActivity : ComponentActivity() {
                                     navController = navController,
                                     navBackStackEntry = navBackStackEntry,
                                 )
+
                                 else -> Unit
                             }
                         },
