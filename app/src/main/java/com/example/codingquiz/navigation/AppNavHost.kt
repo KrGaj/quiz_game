@@ -1,10 +1,10 @@
 package com.example.codingquiz.navigation
 
 import android.net.Uri
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
@@ -28,15 +28,12 @@ import com.example.codingquiz.ui.screen.StatsScreen
 import com.example.codingquiz.util.findActivity
 import com.example.codingquiz.util.navtype.CategoryNavType
 import com.example.codingquiz.util.navtype.QuizSummaryNavType
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
 ) {
-    val scaffoldState = rememberScaffoldState()
-
     NavHost(
         navController = navController,
         startDestination = Screen.Categories.route,
@@ -49,7 +46,6 @@ fun AppNavHost(
         configureQuestionScreenRoute(
             navGraphBuilder = this,
             navController,
-            scaffoldState,
         )
 
         configureQuizResultsScreen(
@@ -101,7 +97,6 @@ private fun configureCategoriesScreenRoute(
 private fun configureQuestionScreenRoute(
     navGraphBuilder: NavGraphBuilder,
     navController: NavController,
-    scaffoldState: ScaffoldState,
 ) {
     navGraphBuilder.composable(
         route = "${Screen.Question.route}/{${Screen.Question.navArg}}",
@@ -109,6 +104,10 @@ private fun configureQuestionScreenRoute(
             type = CategoryNavType
         }),
     ) { backStackEntry ->
+        val snackbarHostState = remember {
+            SnackbarHostState()
+        }
+
         deserializeCategory(backStackEntry)?.let { category ->
             QuestionScreen(
                 category = category,
@@ -122,7 +121,7 @@ private fun configureQuestionScreenRoute(
             val message = stringResource(id = R.string.navigation_question_error)
 
             LaunchedEffect(Unit) {
-                scaffoldState.snackbarHostState.showSnackbar(message)
+                snackbarHostState.showSnackbar(message)
             }
         }
     }
