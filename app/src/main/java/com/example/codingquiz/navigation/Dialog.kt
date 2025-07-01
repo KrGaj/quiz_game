@@ -8,8 +8,4 @@ sealed class Dialog(
     ) {
         const val navArg = "quizResults"
     }
-
-    data object ExitApp : Dialog(
-        route = "ExitApp",
-    )
 }
