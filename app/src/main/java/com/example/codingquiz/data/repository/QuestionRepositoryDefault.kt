@@ -12,13 +12,13 @@ class QuestionRepositoryDefault(
         quantity: Int,
         category: Category,
     ): List<Question> {
-        val questionsEntities = questionDao.getRandomQuestions(
-            quantity,
+        val questionsMap = questionDao.getRandomQuestions(
             category.id,
+            quantity,
         )
 
-        val questions = questionsEntities.map {
-            val possibleAnswers = it.possibleAnswers.map { answer ->
+        val questions = questionsMap.map {
+            val possibleAnswers = it.value.map { answer ->
                 PossibleAnswer(
                     answer.answerText,
                     answer.correct,
@@ -26,9 +26,9 @@ class QuestionRepositoryDefault(
             }
 
             Question(
-                it.question.id,
+                it.key.id,
                 category.id,
-                it.question.text,
+                it.key.text,
                 possibleAnswers.shuffled(),
             )
         }

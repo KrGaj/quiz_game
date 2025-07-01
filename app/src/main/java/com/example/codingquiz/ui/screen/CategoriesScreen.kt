@@ -1,6 +1,5 @@
 package com.example.codingquiz.ui.screen
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,15 +30,11 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CategoriesScreen(
+    // FIXME
     categoryViewModel: CategoryViewModel = koinViewModel(),
-    onBackPressed: () -> Unit,
     navigateToQuestionScreen: (Category) -> Unit,
 ) {
     val categories by categoryViewModel.categories.collectAsStateWithLifecycle()
-
-    BackHandler {
-        onBackPressed()
-    }
 
     CodingQuizTheme {
         Column(

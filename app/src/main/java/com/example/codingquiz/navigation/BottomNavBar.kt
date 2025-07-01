@@ -19,9 +19,9 @@ fun BottomNavBar(
 ) {
     NavigationBar {
         NavigationBarItem(
-            selected = destinationRoute == Screen.Categories.route,
+            selected = destinationRoute == Screen.Categories.routeBase,
             onClick = {
-                navController.navigate(Screen.Categories.route) {
+                navController.navigate(Screen.Categories.routeBase) {
                     popUpTo(navController.graph.findStartDestination().id) {
                         inclusive = true
                     }
@@ -39,8 +39,8 @@ fun BottomNavBar(
         )
 
         NavigationBarItem(
-            selected = destinationRoute == Screen.Statistics.route,
-            onClick = { navController.navigate(Screen.Statistics.route) },
+            selected = destinationRoute == Screen.Statistics.routeBase,
+            onClick = { navController.navigate(Screen.Statistics.routeBase) },
             icon = {
                 Icon(
                     Icons.Filled.Info,

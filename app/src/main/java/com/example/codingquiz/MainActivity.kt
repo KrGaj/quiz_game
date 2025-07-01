@@ -23,6 +23,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            // FIXME
             KoinContext {
                 CodingQuizTheme {
                     val navController = rememberNavController()
@@ -32,8 +33,8 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         bottomBar = {
                             when (navBackStackEntry?.destination?.route) {
-                                Screen.Categories.route,
-                                Screen.Statistics.route -> BottomNavBar(
+                                Screen.Categories.routeBase,
+                                Screen.Statistics.routeBase -> BottomNavBar(
                                     navController = navController,
                                     destinationRoute = navBackStackEntry?.destination?.route,
                                 )
